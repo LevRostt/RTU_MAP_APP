@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    //custom
+    <color name="grey">#FF393E46</color>
+    <color name="like_color">#FFFD3145</color>
+
+    <color name="brown_for_active_button">#FF5D402E</color>
+    <color name="base_brown">#FF8B4F25</color>
+    <color name="dark_brown">#FF321300</color>
+    <color name="light_beige_main_theme">#FFFFEEDD</color>
+    <color name="beige_main_theme_v2">#FFFFDBC8</color>
+    <color name="beige_background_theme">#FFFFDEB6</color>
+    <color name="milky">#FFFFF6EE</color>
+
+
 </resources>

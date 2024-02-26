@@ -1,7 +1,8 @@
-package ru.levrost.rtu_map_app
+package ru.levrost.rtu_map_app.ui.view.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import ru.levrost.rtu_map_app.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

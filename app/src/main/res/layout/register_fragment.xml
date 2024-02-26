@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_beige_main_theme"
+    tools:context="ui.view.Fragment.RegisterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="660dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="-20dp"
+        android:background="@drawable/register_background"
+        android:elevation="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+<!--        <TextView-->
+<!--            android:id="@+id/loginWarning"-->
+<!--            android:background="@drawable/button_border_light_style"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="50dp"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textColor="@color/design_default_color_error"-->
+<!--            android:text="Test warning"-->
+<!--            android:paddingVertical="10dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:textAlignment="center"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent" />-->
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.703">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/login_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Введите логин"
+                android:maxLength="25"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:scrollbars="horizontal"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Password"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/password_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Введите пароль"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:scrollbars="horizontal"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
