@@ -12,8 +12,9 @@
     <color name="dark_brown">#FF321300</color>
     <color name="light_beige_main_theme">#FFFFEEDD</color>
     <color name="beige_main_theme_v2">#FFFFDBC8</color>
-    <color name="beige_background_theme">#FFFFDEB6</color>
-    <color name="milky">#FFFFF6EE</color>
+    <color name="beige_background_theme_v2">#FFFFDEB6</color>
+    <color name="beige_background_theme">#FFFFE5D3</color>
+    <color name="milky">#FFFFF6EF</color>
 
 
 </resources>

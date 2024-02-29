@@ -5,7 +5,7 @@
 
     <gradient
         android:startColor="@color/beige_background_theme"
-        android:endColor="#FFE6C9"
+        android:endColor="@color/beige_background_theme"
         android:angle="-90"
         />
 

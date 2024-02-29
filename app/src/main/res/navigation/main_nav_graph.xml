@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_nav_graph">
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/map_graph">
 
+    <include app:graph="@navigation/map_graph" />
+    <include app:graph="@navigation/community_graph" />
+    <include app:graph="@navigation/map_list_graph" />
+    <include app:graph="@navigation/user_profile_graph" />
 </navigation>

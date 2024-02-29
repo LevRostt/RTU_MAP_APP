@@ -11,80 +11,108 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="660dp"
+        android:layout_height="match_parent"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="-20dp"
+        android:layout_marginBottom="150dp"
         android:background="@drawable/register_background"
         android:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.44"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-<!--        <TextView-->
-<!--            android:id="@+id/loginWarning"-->
-<!--            android:background="@drawable/button_border_light_style"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="50dp"-->
-<!--            android:textSize="18sp"-->
-<!--            android:textColor="@color/design_default_color_error"-->
-<!--            android:text="Test warning"-->
-<!--            android:paddingVertical="10dp"-->
-<!--            android:visibility="gone"-->
-<!--            android:textAlignment="center"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+        <TextView
+            android:id="@+id/naming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:text="@string/project_name"
+            android:textColor="@color/dark_brown"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/loginWarning"-->
+        <!--            android:background="@drawable/button_border_light_style"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="50dp"-->
+        <!--            android:textSize="18sp"-->
+        <!--            android:textColor="@color/design_default_color_error"-->
+        <!--            android:text="Test warning"-->
+        <!--            android:paddingVertical="10dp"-->
+        <!--            android:visibility="gone"-->
+        <!--            android:textAlignment="center"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/linearLayout"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginBottom="180dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.703">
+            app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username"
-                android:textColor="@color/black" />
-
-            <EditText
-                android:id="@+id/login_edittext"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/loginField"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Введите логин"
-                android:maxLength="25"
-                android:maxLines="1"
-                android:padding="10dp"
-                android:scrollbars="horizontal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:text="Password"
-                android:textColor="@color/black" />
-
-            <EditText
-                android:id="@+id/password_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:hint="Введите пароль"
-                android:inputType="textPassword"
+                android:hint="Логин"
                 android:maxLength="20"
-                android:maxLines="1"
-                android:padding="10dp"
-                android:scrollbars="horizontal"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey" />
+                android:textColorHint="@color/base_brown"
+                app:boxStrokeColor="@color/base_log_field"
+                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidthFocused="4dp"
+                app:hintTextColor="@color/base_brown"
+                app:cursorColor="@color/base_brown">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/registerField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:hint="Пароль"
+                android:maxLength="20"
+                android:textColorHint="@color/base_brown"
+                app:boxStrokeColor="@color/base_log_field"
+                app:boxStrokeWidth="2dp"
+                app:boxStrokeWidthFocused="4dp"
+                app:hintTextColor="@color/base_brown"
+                app:cursorColor="@color/base_brown"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/base_brown">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:textAllCaps="false"
+                android:layout_marginTop="40dp"
+                android:paddingHorizontal="8dp"
+                android:layout_width="184dp"
+                android:layout_height="wrap_content"
+                android:text="Зарегистроваться"
+                android:layout_gravity="center"
+                android:background="@drawable/main_button"
+                android:textColor="@color/base_brown" />
 
         </LinearLayout>
 

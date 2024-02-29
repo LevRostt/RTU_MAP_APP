@@ -2,8 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.RTU_MAP_APP" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/base_brown</item>
+        <item name="colorControlActivated">@color/base_brown</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+
     </style>
 
     <style name="Theme.RTU_MAP_APP" parent="Base.Theme.RTU_MAP_APP" />
+
+
 </resources>
