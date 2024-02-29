@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+
+            <corners android:radius="15dp"/>
+
+            <solid
+                android:color="@color/milky"/>
+
+            <stroke android:width="4dp"
+                android:color="@color/base_brown"/>
+
+        </shape>
+    </item>
+    <!--    <item android:drawable="@drawable/button_focused"-->
+    <!--        android:state_focused="true" />-->
+    <item>
+        <shape android:shape="rectangle">
+
+            <corners android:radius="15dp"/>
+
+            <solid
+                android:color="@color/light_beige_main_theme"/>
+
+            <stroke android:width="2dp"
+                android:color="@color/base_brown"/>
+
+        </shape>
+    </item>
+
+</selector>

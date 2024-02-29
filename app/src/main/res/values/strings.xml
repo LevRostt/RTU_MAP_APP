@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">RTU_MAP_APP</string>
+    <string name="btn_log">Login</string>
+    <string name="btn_log_without_acc">Login without account</string>
+    <string name="btn_reg">Sing Up</string>
+    <string name="project_name">RTU MAP APP</string>
+    <string name="map">Map</string>
+    <string name="places">Places</string>
+    <string name="community">Community</string>
+    <string name="profile">Profile</string>
 </resources>
