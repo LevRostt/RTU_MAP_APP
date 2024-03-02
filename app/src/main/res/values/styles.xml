@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+        <!-- Base application theme. -->
+    <style name="Theme.UNI_RTU_MAP_APP" parent="Theme.Material3.DayNight.NoActionBar">
+            <!-- Customize your light theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/light_beige_main_theme</item>
+        <item name="colorSecondary">@color/base_brown</item>
+        <item name="android:textColorHint">@color/base_brown_light</item>
+        <item name="android:editTextColor">@color/base_log_field</item>
+
+        <!--        При edge-to-edge не работают-->
+        <item name="android:statusBarColor">@color/light_beige_main_theme</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 
 
 </resources>

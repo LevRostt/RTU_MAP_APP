@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@id/map_graph"
+        android:icon="@drawable/map_outline"
+        android:title="@string/map"/>
+    <item android:id="@id/map_list_graph"
+        android:icon="@drawable/location_outline"
+        android:title="@string/places"/>
+
+
+</menu>

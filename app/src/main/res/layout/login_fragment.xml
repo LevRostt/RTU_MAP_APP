@@ -9,7 +9,6 @@
     tools:context=".ui.view.Fragment.LoginFragment">
 <!--    android:translationZ="10dp">-->
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -58,6 +57,7 @@
                 android:hint="Логин"
                 android:maxLength="20"
                 android:textColorHint="@color/base_brown"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/base_log_field"
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="4dp"
@@ -79,6 +79,7 @@
                 android:hint="Пароль"
                 android:maxLength="20"
                 android:textColorHint="@color/base_brown"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/base_log_field"
                 app:boxStrokeWidth="2dp"
                 app:boxStrokeWidthFocused="4dp"
