@@ -11,10 +11,44 @@
         <item name="android:textColorHint">@color/base_brown_light</item>
         <item name="android:editTextColor">@color/base_log_field</item>
 
+        <item name="materialSwitchStyle">@style/Widget.App.Switch</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+
         <!--        При edge-to-edge не работают-->
         <item name="android:statusBarColor">@color/light_beige_main_theme</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
+    <style name="Widget.App.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Switch</item>
+    </style>
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+
+<!--   To edit -->
+
+
+    <style name="ThemeOverlay.App.Switch" parent="">
+        <item name="colorOutline">@color/light_beige_main_theme</item>
+        <item name="colorOnPrimary">@color/dark_brown</item>
+    </style>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/base_brown</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+
+<!--    Active text on bar    -->
+        <item name="colorOnSurface">@color/base_brown</item>
+        <!--    Active icon color-->
+        <item name="colorOnSecondaryContainer">@color/milky</item>
+
+        <item name="colorOnSurfaceVariant">@color/nav_icon_ripple</item>
+
+    </style>
 
 </resources>

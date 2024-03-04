@@ -26,7 +26,9 @@ import ru.levrost.rtu_map_app.databinding.MapFragmentBinding
 
 class MapFragment: Fragment() {
 
-    private lateinit var mBinding: MapFragmentBinding
+    private var _binding: MapFragmentBinding? = null
+    private val mBinding get() = _binding!!
+
     private lateinit var mapView: MapView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +42,14 @@ class MapFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = MapFragmentBinding.inflate(inflater, container, false)
+        _binding = MapFragmentBinding.inflate(inflater, container, false)
         mapView = mBinding.mapView
 
         val userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView.mapWindow)
         userLocationLayer.isVisible = false
         userLocationLayer.setObjectListener(locationObjectListener)
+
+//        mapView.map.isNightModeEnabled = true
 
         updateUserLocation()
 
@@ -159,6 +163,12 @@ class MapFragment: Fragment() {
         mapView.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        requireActivity().window.statusBarColor = Color.TRANSPARENT
+        _binding = null
     }
 
     companion object {

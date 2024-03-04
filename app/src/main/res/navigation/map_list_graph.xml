@@ -9,5 +9,14 @@
         android:id="@+id/mapListFragment"
         android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapListFragment"
         android:label="map_list_fragment"
-        tools:layout="@layout/map_list_fragment" />
+        tools:layout="@layout/map_list_fragment" >
+        <action
+            android:id="@+id/action_mapListFragment_to_createPlaceFragment"
+            app:destination="@id/createPlaceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPlaceFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.CreatePlaceFragment"
+        android:label="create_place_fragment"
+        tools:layout="@layout/create_place_fragment" />
 </navigation>

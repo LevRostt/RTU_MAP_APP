@@ -7,5 +7,4 @@
     <include app:graph="@navigation/map_graph" />
     <include app:graph="@navigation/community_graph" />
     <include app:graph="@navigation/map_list_graph" />
-    <include app:graph="@navigation/user_profile_graph" />
 </navigation>

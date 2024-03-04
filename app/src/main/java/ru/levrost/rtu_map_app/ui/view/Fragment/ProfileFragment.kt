@@ -5,17 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import ru.levrost.rtu_map_app.databinding.RegisterFragmentBinding
+import ru.levrost.rtu_map_app.databinding.FragmentProfileBinding
 
-class RegisterFragment: Fragment() {
-    private lateinit var mBinding: RegisterFragmentBinding
+class ProfileFragment: Fragment() {
+    private var _binding: FragmentProfileBinding? = null
+    private val mBinding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = RegisterFragmentBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
         return mBinding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

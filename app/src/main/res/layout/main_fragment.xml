@@ -13,6 +13,7 @@
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="-4dp"
         android:layout_weight="1"
         app:navGraph="@navigation/main_nav_graph" />
 
@@ -21,11 +22,13 @@
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottom_nav_view"
-        app:itemIconSize="40dp"
-        app:itemRippleColor="@color/nav_ripple"
-        app:itemHorizontalTranslationEnabled="true"
         android:layout_weight="0"
-        app:menu="@menu/main_nav_menu" />
+        android:background="@drawable/bottom_nav_view"
+        app:menu="@menu/main_nav_menu"
+        app:elevation="8dp"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
+        app:itemIconSize="32dp"
+        app:itemRippleColor="@color/nav_icon_ripple"
+        app:itemHorizontalTranslationEnabled="true" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

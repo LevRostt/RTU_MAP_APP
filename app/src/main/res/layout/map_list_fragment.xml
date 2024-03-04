@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="32dp"
     android:background="@color/milky"
     tools:context=".ui.view.Fragment.MapListFragment">
 
@@ -44,11 +45,11 @@
 
 
     <ImageButton
-        android:id="@+id/buttonToModerationChats"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:id="@+id/btnToAddPlace"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/add_button_bg"
         android:src="@drawable/add_button"
         app:layout_constraintBottom_toBottomOf="parent"
