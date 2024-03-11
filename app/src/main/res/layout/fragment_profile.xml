@@ -49,8 +49,9 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/subscribeBtn"
-        android:layout_width="161dp"
-        android:layout_height="43dp"
+        android:visibility="visible"
+        android:layout_width="160dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/main_button"
         android:gravity="center"
@@ -96,5 +97,23 @@
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
 <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/exit"
+        android:layout_width="80dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="48dp"
+        android:background="@drawable/main_button"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:text="Exit"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textScaleX="0.9"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
