@@ -18,5 +18,14 @@
         android:id="@+id/createPlaceFragment"
         android:name="ru.levrost.rtu_map_app.ui.view.Fragment.CreatePlaceFragment"
         android:label="create_place_fragment"
-        tools:layout="@layout/create_place_fragment" />
+        tools:layout="@layout/create_place_fragment" >
+        <action
+            android:id="@+id/action_createPlaceFragment_to_mapSelectedFragment"
+            app:destination="@id/mapSelectedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapSelectedFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapSelectedFragment"
+        android:label="fragment_map_selected"
+        tools:layout="@layout/fragment_map_selected" />
 </navigation>

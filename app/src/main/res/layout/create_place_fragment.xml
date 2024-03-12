@@ -9,7 +9,7 @@
     tools:context=".ui.view.Fragment.CreatePlaceFragment">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/cancel_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
@@ -31,8 +31,17 @@
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
         android:src="@drawable/empty_pic"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_button"
         tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap to pic to select another"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/base_brown_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/place_pic" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputFilledStyle"
@@ -53,6 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/place_pic">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_name_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/dark_brown" />
@@ -119,6 +129,40 @@
 
     </LinearLayout>
 
+<!--    <LinearLayout-->
+<!--        android:id="@+id/pin_chooser"-->
+<!--        android:layout_width="204dp"-->
+<!--        android:layout_height="66dp"-->
+<!--        android:background="@drawable/secondary_button"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:visibility="visible"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout6">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:background="@drawable/btn_select_on_the_map"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingHorizontal="10dp"-->
+<!--            android:text="Select pin"-->
+<!--            android:textColor="@color/base_brown"-->
+<!--            android:textSize="18sp" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/choose_pin"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:contentDescription="select on map"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:src="@drawable/map_filled_56dp" />-->
+
+<!--    </LinearLayout>-->
+
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/materialSwitch"
         android:layout_width="wrap_content"
@@ -133,7 +177,7 @@
         app:switchPadding="16dp" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_confirm"
         android:layout_width="184dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

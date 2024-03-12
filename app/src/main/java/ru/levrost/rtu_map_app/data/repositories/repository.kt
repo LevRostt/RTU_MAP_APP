@@ -4,6 +4,6 @@ import androidx.lifecycle.LiveData
 
 interface repository<T> {
     fun getData() : LiveData<T>?
-    fun updateData(data : T) : Unit
+//    fun updateData(data : T) : Unit
 
 }

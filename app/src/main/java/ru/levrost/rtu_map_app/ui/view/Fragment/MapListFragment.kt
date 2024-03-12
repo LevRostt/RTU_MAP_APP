@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.databinding.MapListFragmentBinding
+import ru.levrost.rtu_map_app.ui.adapters.PlaceListRVAdapter
 
 class MapListFragment: Fragment() {
     private var _binding: MapListFragmentBinding? = null
@@ -25,6 +27,16 @@ class MapListFragment: Fragment() {
 
         return mBinding.root
     }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mBinding.rvMapList.layoutManager = LinearLayoutManager(context)
+       // mBinding.rvMapList.adapter = PlaceListRVAdapter()
+
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

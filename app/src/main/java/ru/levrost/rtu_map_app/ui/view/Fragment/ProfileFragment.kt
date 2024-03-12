@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import ru.levrost.rtu_map_app.databinding.FragmentProfileBinding
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
@@ -15,7 +16,7 @@ class ProfileFragment: Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val mBinding get() = _binding!!
 
-    private val userViewModel: UserViewModel by viewModels {
+    private val userViewModel: UserViewModel by activityViewModels<UserViewModel> {
         UserViewModel.Factory
     }
 

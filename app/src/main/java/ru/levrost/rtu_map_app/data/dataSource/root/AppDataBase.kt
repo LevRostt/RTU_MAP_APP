@@ -8,17 +8,20 @@ import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import ru.levrost.rtu_map_app.data.dataSource.dao.PlaceDao
 import ru.levrost.rtu_map_app.data.dataSource.dao.UserDao
 import ru.levrost.rtu_map_app.data.dataSource.entites.ListConvertor
+import ru.levrost.rtu_map_app.data.dataSource.entites.PlaceEntity
 import ru.levrost.rtu_map_app.data.dataSource.entites.UserEntity
 import java.util.concurrent.Executors
 import kotlin.concurrent.Volatile
 
-@Database(entities = [UserEntity::class], version = 1)
+@Database(entities = [UserEntity::class, PlaceEntity::class], version = 2)
 @TypeConverters(ListConvertor::class)
 abstract class AppDataBase : RoomDatabase() {
 
     abstract fun userDao() : UserDao?
+    abstract fun placeListDao() : PlaceDao?
 
     companion object{
         private val NUMBER_OF_THREADS = 4

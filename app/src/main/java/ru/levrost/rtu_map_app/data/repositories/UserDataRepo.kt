@@ -18,7 +18,7 @@ class UserDataRepo(private val application: Application) : repository<UserData> 
         } ?: MutableLiveData(UserData("none", "-1"))
     }
 
-    override fun updateData(data : UserData) {
+    fun updateData(data : UserData) {
         AppDataBase.databaseWriteExecutor.execute {
             dataBaseSource.userDao()?.editProfile(UserEntity(0, data.name, data.userId, data.likes, data.subUsers, data.latitude, data.longitude))
         }
