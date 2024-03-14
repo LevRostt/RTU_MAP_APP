@@ -1,6 +1,7 @@
 package ru.levrost.rtu_map_app.ui.viewModel
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -16,9 +17,11 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
     private val repo = PlaceListRepo(application)
     private val _placeList = repo.getData()
     private val _point : MutableLiveData<Point> = MutableLiveData()
+    private val _lastBitMap : MutableLiveData<Bitmap> = MutableLiveData()
+
     val placeList get() = _placeList
 
-    fun addPlace(place: Place){
+    private fun addPlace(place: Place){
         repo.addPlace(place)
     }
 
@@ -27,11 +30,25 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
         repo.addPlace(Place(name, idPlace, userName, userId, latitude, longitude, description, likes, isLiked, image))
     }
 
-    fun selectPlace(latitude: Double, longitude: Double){
+    fun likePlace(id : Int){
+        val place = _placeList.value!!.get(id)
+        place.likes++
+        // отключить при отстутвии интернета
+    }
+
+    fun deletePlace(id : String){
+
+    }
+
+    fun setLastBitMap(bitmap: Bitmap) = _lastBitMap.postValue(bitmap)
+
+    fun getLastBitMap() = _lastBitMap.value
+
+    fun selectPlace(latitude: Double, longitude: Double){ //Переписать реализацию?
         _point.postValue(Point(latitude, longitude))
     }
 
-    fun selectedPlace() = _point.value
+    fun selectedPlace() = _point.value //Аналогично переписать?
 
     companion object{
         val Factory: ViewModelProvider.Factory = object :  ViewModelProvider.Factory {

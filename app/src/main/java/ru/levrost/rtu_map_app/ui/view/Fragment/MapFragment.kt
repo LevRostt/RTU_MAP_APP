@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Observer
@@ -41,6 +42,7 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.databinding.MapFragmentBinding
+import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
 class MapFragment: Fragment() {
@@ -49,6 +51,11 @@ class MapFragment: Fragment() {
     private val mBinding get() = _binding!!
     private val userViewModel: UserViewModel by viewModels {
         UserViewModel.Factory
+    }
+
+
+    private val placeListViewModel: PlaceListViewModel by activityViewModels<PlaceListViewModel> {
+        PlaceListViewModel.Factory
     }
 
     private var mapView: MapView? = null
@@ -124,6 +131,13 @@ class MapFragment: Fragment() {
             jumpToUser(2F)
         }
 
+
+        if (placeListViewModel.selectedPlace() != null && placeListViewModel.selectedPlace()!!.latitude != 0.0){
+            mapView!!.map.move(CameraPosition(
+                Point(placeListViewModel.selectedPlace()!!.latitude, placeListViewModel.selectedPlace()!!.longitude), 9.5F, 0.0F, 45F),
+                Animation(Animation.Type.SMOOTH, 2.0F),
+                null)
+        }
     }
 
     private fun jumpToUser(duration: Float){

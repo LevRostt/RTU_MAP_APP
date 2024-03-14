@@ -12,11 +12,10 @@ class UserData(val name: String, val userId: String) {
         get() = _subUsers
 
     private var _likes : ArrayList<String> = ArrayList()
-        get() = field
 
     var likes: ArrayList<String>
         set(value) {}
-        get() = _subUsers
+        get() = _likes
 
     constructor(_name: String, _userId: String, _latitude: Double, _longitude: Double, subUsers: List<String>, likes: List<String>)
             : this(_name, _userId){

@@ -3,9 +3,13 @@ package ru.levrost.rtu_map_app.ui.viewModel
 import android.Manifest
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.core.content.getSystemService
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -25,6 +29,7 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
     private val repo: UserDataRepo = UserDataRepo(application)
     private var userData: LiveData<UserData> = repo.getData()
 
+
     private var userPoint: Point = Point(55.7515, 37.64)
 
     private val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
@@ -34,15 +39,19 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
     }
 
     private fun updateData() : Boolean{
-        if (ActivityCompat.checkSelfPermission(
+        if ((ActivityCompat.checkSelfPermission(
                 getApplication(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
                 getApplication(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return false
+            ) != PackageManager.PERMISSION_GRANTED) ||
+            !((application.getSystemService(Context.LOCATION_SERVICE) as LocationManager)
+                .isProviderEnabled(
+                LocationManager.GPS_PROVIDER))
+        ){
+                return false
         }
 
         fusedLocationProviderClient.lastLocation.addOnCompleteListener( application.mainExecutor ) {

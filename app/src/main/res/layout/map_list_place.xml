@@ -47,6 +47,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:id="@+id/btn_delete"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_weight="0"
@@ -92,7 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/place_name"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
+        android:id="@+id/btn_show_on_map"
         android:layout_width="200dp"
         android:layout_height="32dp"
         android:layout_marginStart="36dp"
@@ -106,22 +107,23 @@
         app:layout_constraintTop_toBottomOf="@+id/place_info" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/btn_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
         android:layout_marginTop="8dp"
         android:background="@color/light_beige_main_theme"
         android:src="@drawable/favorite_icon"
-        app:layout_constraintStart_toEndOf="@+id/appCompatButton"
+        app:layout_constraintStart_toEndOf="@+id/btn_show_on_map"
         app:layout_constraintTop_toBottomOf="@+id/place_info" />
 
     <TextView
+        android:id="@+id/count_of_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1337"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        android:text="0"
+        app:layout_constraintEnd_toEndOf="@+id/btn_like"
+        app:layout_constraintStart_toStartOf="@+id/btn_like"
+        app:layout_constraintTop_toBottomOf="@+id/btn_like" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

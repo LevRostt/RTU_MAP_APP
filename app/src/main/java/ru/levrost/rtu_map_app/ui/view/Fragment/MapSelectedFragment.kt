@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -39,7 +38,7 @@ class MapSelectedFragment: Fragment() {
     private lateinit var mapView: MapView
     private lateinit var mapKit : MapKit
     private lateinit var mapObjects: MapObjectCollection
-
+    private lateinit var icon : ImageProvider
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,6 +49,7 @@ class MapSelectedFragment: Fragment() {
         mapView = mBinding.mapView
         mapKit = MapKitFactory.getInstance()
         mapObjects = mapView.map.mapObjects.addCollection()
+        icon = ImageProvider.fromResource(context, R.drawable.location_pin_filled)
 
         return mBinding.root
     }
@@ -61,18 +61,24 @@ class MapSelectedFragment: Fragment() {
         mapView.map.addInputListener(inputListener)
     }
 
-    val inputListener = object : InputListener{
+    private val inputListener = object : InputListener{
         override fun onMapTap(map: Map, point: Point) {
 //            Toast.makeText(getContext(), point.getLatitude() + String.valueOf(point.getLongitude()) , Toast.LENGTH_SHORT).show();
-            val obj = mapObjects.addPlacemark(Point(point.latitude, point.longitude))
-            obj.setIcon(
-                ImageProvider.fromResource(context, R.drawable.location_pin_filled),
-                IconStyle().setAnchor(PointF(0.5f, 0.7f))
-                    .setScale(0.04f)
+
+            // icon не устанавливается
+            val obj = mapObjects.addPlacemark(
+                Point(point.latitude, point.longitude)
             )
+
+            //
+            obj.setIcon(
+                icon
+            )
+
             obj.isVisible = true
+
             val builder = AlertDialog.Builder(context)
-            builder.setMessage("Выбрать это место?.")
+            builder.setMessage("Выбрать это место?")
                 .setCancelable(false)
                 .setPositiveButton("Да") { dialog, id -> //pop back stack
 //                    val bundle = Bundle()
