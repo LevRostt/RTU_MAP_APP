@@ -91,52 +91,36 @@ class MapFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        userLocationLayer!!.isVisible = false
+
+        userLocationLayer!!.isVisible = true
         userLocationLayer!!.setObjectListener(locationObjectListener)
-
-        updateLocation()
-
-        val hideAllStyle =
-            "[" +  // Задание стиля через псевдо JSON для карты. По аналогии с примером из API
-                    "        {" +
-                    "            \"types\": \"point\"," +
-                    "            \"tags\": {" +
-                    "                \"all\": [" +
-                    "                    \"poi\"" +
-                    "                ]," +
-                    "                \"none\": [" +
-                    "                    \"outdoor\"," +
-                    "                    \"major_landmark\"" +
-                    "                ]" +
-                    "            }," +
-                    "            \"stylers\": {" +
-                    "                \"visibility\": \"off\"" +
-                    "            }" +
-                    "        }" +
-                    "    ]"
-
-        mapView!!.map.setMapStyle(hideAllStyle)
-
-        if(!checkAvailableUserLocationAccess()){
-            requestAvailableUserLocation()
-            mapView!!.map
-                .move(CameraPosition(Point(55.7515, 37.64), 4f, 0.0f, 0.0f))
-        } else{
-            userLocationLayer!!.isVisible = true
-            jumpToUser(1.5F)
-        }
 
         mBinding.userLocationBtm.setOnClickListener {
             updateLocation()
             jumpToUser(2F)
         }
 
+        setupMapStyle()
 
+        if(!checkAvailableUserLocationAccess()){
+            requestAvailableUserLocation()
+            mapView!!.map
+                .move(CameraPosition(Point(55.7515, 37.64), 4f, 0.0f, 0.0f))
+        } else{
+            jumpToUser(1.5F)
+        }
+
+        updateLocation()
+        jumpToUser(2F)
+        jumpToPlace()
+    }
+    private fun jumpToPlace(){
         if (placeListViewModel.selectedPlace() != null && placeListViewModel.selectedPlace()!!.latitude != 0.0){
             mapView!!.map.move(CameraPosition(
                 Point(placeListViewModel.selectedPlace()!!.latitude, placeListViewModel.selectedPlace()!!.longitude), 9.5F, 0.0F, 45F),
                 Animation(Animation.Type.SMOOTH, 2.0F),
                 null)
+            placeListViewModel.selectPlace(0.0,0.0)
         }
     }
 
@@ -318,6 +302,29 @@ class MapFragment: Fragment() {
             override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {}
         }
 
+    private fun setupMapStyle(){
+        val hideAllStyle =
+            "[" +  // Задание стиля через псевдо JSON для карты. По аналогии с примером из API
+                    "        {" +
+                    "            \"types\": \"point\"," +
+                    "            \"tags\": {" +
+                    "                \"all\": [" +
+                    "                    \"poi\"" +
+                    "                ]," +
+                    "                \"none\": [" +
+                    "                    \"outdoor\"," +
+                    "                    \"major_landmark\"" +
+                    "                ]" +
+                    "            }," +
+                    "            \"stylers\": {" +
+                    "                \"visibility\": \"off\"" +
+                    "            }" +
+                    "        }" +
+                    "    ]"
+
+        mapView!!.map.setMapStyle(hideAllStyle)
+    }
+
 
     override fun onStart() {
         mapView?.onStart()
@@ -328,6 +335,7 @@ class MapFragment: Fragment() {
     override fun onStop() {
         mapView?.onStop()
         MapKitFactory.getInstance().onStop()
+        //Save last cam position
         super.onStop()
     }
 

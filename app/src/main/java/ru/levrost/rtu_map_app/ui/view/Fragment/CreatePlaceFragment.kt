@@ -15,9 +15,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import ru.levrost.rtu_map_app.R
+import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.databinding.CreatePlaceFragmentBinding
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
@@ -99,17 +101,18 @@ class CreatePlaceFragment: Fragment() {
             Toast.makeText(context, "Выберете, пожалуйста, место на карте", Toast.LENGTH_LONG)
                 .show()
         } else {
-            userViewModel.getUser().observe(viewLifecycleOwner) {
 
-                val byteArrayOutput = ByteArrayOutputStream()
-                var byteArray : ByteArray? = null
-                if (placeListViewModel.getLastBitMap() != null) {
-                    placeListViewModel.getLastBitMap()
-                        ?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutput)
-                    byteArray = byteArrayOutput.toByteArray()
-                    Log.d("LRDebugMess",Base64.getEncoder().encodeToString(byteArray))
-                }
+            val byteArrayOutput = ByteArrayOutputStream()
+            var pictureToSave = ""
+            if (placeListViewModel.getLastBitMap() != null) {
+                placeListViewModel.getLastBitMap()
+                    ?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutput)
+                val byteArray = byteArrayOutput.toByteArray()
+                pictureToSave = Base64.getEncoder().encodeToString(byteArray)
+                Log.d("LRDebugMess", pictureToSave)
+            }
 
+            fun userObserver() = Observer<UserData>{
                 placeListViewModel.addPlace(
                     mBinding.nameField.editText?.text.toString(),
                     Random.nextInt(0,100000000).toString(),
@@ -120,13 +123,13 @@ class CreatePlaceFragment: Fragment() {
                     mBinding.descriptionField.editText?.text.toString(),
                     0,
                     false,
-                    Base64.getEncoder().encodeToString(byteArray)
-                    )
-
-
+                    pictureToSave
+                )
+                userViewModel.getUser().removeObservers(viewLifecycleOwner)
+                findNavController().popBackStack()
             }
 
-            findNavController().popBackStack()
+            userViewModel.getUser().observe(viewLifecycleOwner, userObserver())
 
         }
     }

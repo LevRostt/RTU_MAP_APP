@@ -29,9 +29,13 @@ class Place(val name: String, val idPlace: String, val userName: String, val use
         _image = image
     }
 
-    fun liked(){
+    fun liked(){ //Функционал лайка места
         _is_liked = true
         likes++
+    }
+
+    fun isPicSaved():Boolean { // проверка записи картинки
+        return _image != ""
     }
 
 }

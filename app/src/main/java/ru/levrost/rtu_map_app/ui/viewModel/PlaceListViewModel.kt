@@ -4,6 +4,7 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +22,10 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
 
     val placeList get() = _placeList
 
+    fun getPlaceByText(text: String): LiveData<List<Place>> {
+        return repo.getPlaceByText(text)
+    }
+
     private fun addPlace(place: Place){
         repo.addPlace(place)
     }
@@ -30,13 +35,19 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
         repo.addPlace(Place(name, idPlace, userName, userId, latitude, longitude, description, likes, isLiked, image))
     }
 
-    fun likePlace(id : Int){
+    fun likePlace(id : Int){ // работать только если есть интернет
         val place = _placeList.value!!.get(id)
         place.likes++
         // отключить при отстутвии интернета
     }
 
-    fun deletePlace(id : String){
+    fun unLikePlace(id : Int){ // работать только если есть интернет
+        val place = _placeList.value!!.get(id)
+        place.likes++
+        // отключить при отстутвии интернета
+    }
+
+    fun deletePlace(id : String){ //Функциональность только если есть интернет
 
     }
 

@@ -49,13 +49,14 @@ class MapSelectedFragment: Fragment() {
         mapView = mBinding.mapView
         mapKit = MapKitFactory.getInstance()
         mapObjects = mapView.map.mapObjects.addCollection()
-        icon = ImageProvider.fromResource(context, R.drawable.location_pin_filled)
 
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        icon = ImageProvider.fromResource(context, R.drawable.location_pin_filled)
 
         mapView.map.move(CameraPosition(Point(55.7515, 37.64), 5f, 0.0f, 0.0f))
         mapView.map.addInputListener(inputListener)

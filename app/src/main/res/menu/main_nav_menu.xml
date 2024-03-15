@@ -7,9 +7,10 @@
     <item android:id="@id/map_list_graph"
         android:icon="@drawable/location_outline"
         android:title="@string/places"/>
-    <item android:id="@id/community_graph"
-        android:icon="@drawable/groups_outline"
-        android:title="@string/community"/>
+<!--    Нет возможности реализовать-->
+<!--    <item android:id="@id/community_graph"-->
+<!--        android:icon="@drawable/groups_outline"-->
+<!--        android:title="@string/community"/>-->
     <item android:id="@id/profile_graph"
         android:icon="@drawable/person_outline"
         android:title="@string/profile"/>

@@ -1,12 +1,16 @@
 package ru.levrost.rtu_map_app.ui.adapters
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -14,9 +18,11 @@ import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.databinding.MapListPlaceBinding
+import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 import ru.levrost.rtu_map_app.ui.view.Fragment.MapListFragment
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
+import java.lang.NumberFormatException
 import java.util.Base64
 
 class PlaceListRVAdapter(
@@ -93,17 +99,30 @@ class PlaceListRVAdapter(
         }
 
         binding.btnLike.setOnClickListener {
-            if (userData?.likes?.contains(place.idPlace) == false){
-                //add like
-                userViewModel.likePlace(place.idPlace)
-                placeListViewModel.likePlace(position)
-                binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
-                binding.countOfLikes.text = (binding.countOfLikes.text.toString().toInt() + 1).toString()
+            var intUserId : Int? = null
+            try{
+                intUserId = userData?.userId?.toInt()
             }
-            else{
-                userViewModel.unLikePlace(place.idPlace)
-                binding.btnLike.setImageResource(R.drawable.favorite_icon)
-                binding.countOfLikes.text = (binding.countOfLikes.text.toString().toInt() - 1).toString()
+            catch (_: NumberFormatException){}
+
+            if (intUserId == null || intUserId == 0){
+                loginRequest()
+            }
+            else {
+                if (userData?.likes?.contains(place.idPlace) == false) {
+                    //add like
+                    userViewModel.likePlace(place.idPlace)
+                    placeListViewModel.likePlace(position)
+                    binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
+                    binding.countOfLikes.text =
+                        (binding.countOfLikes.text.toString().toInt() + 1).toString()
+                } else {
+                    userViewModel.unLikePlace(place.idPlace)
+                    placeListViewModel.unLikePlace(position)
+                    binding.btnLike.setImageResource(R.drawable.favorite_icon)
+                    binding.countOfLikes.text =
+                        (binding.countOfLikes.text.toString().toInt() - 1).toString()
+                }
             }
         }
 
@@ -114,7 +133,18 @@ class PlaceListRVAdapter(
 
         binding.btnDelete.setOnClickListener {
             // delete
-            placeListViewModel.deletePlace(place.idPlace)
+            var intUserId : Int? = null
+            try{
+                intUserId = userData?.userId?.toInt()
+            }
+            catch (_: NumberFormatException){}
+
+            if (intUserId == null || intUserId == 0){
+                loginRequest()
+            }
+            else{
+                placeListViewModel.deletePlace(place.idPlace)
+            }
         }
 
         holder.itemView.animation =
@@ -124,5 +154,25 @@ class PlaceListRVAdapter(
 //                context.resources.getIdentifier("fade_out", "anim", context.packageName)
             )
 
+    }
+
+    private fun loginRequest(){
+        val alertDialogBuilder = AlertDialog.Builder(fragment.context)
+        alertDialogBuilder.setMessage("Пожалуйста, залогинтесь, чтобы иметь возможность взаимодействовать с этой функциональностью")
+            .setCancelable(false)
+            .setPositiveButton("Залогиниться") { dialog, id -> // login
+                fragment.requireActivity().getSharedPreferences("UID", AppCompatActivity.MODE_PRIVATE)
+                    .edit()
+                    .putString("id", "-1")
+                    .apply()
+                userViewModel.deleteUser()
+                (fragment.requireActivity() as MainActivity).navRestart()
+            }
+            .setNegativeButton(
+                "Отмена"
+            ) { dialog, id -> // Закрываем диалоговое окно
+                dialog.cancel()
+            }
+        alertDialogBuilder.create().show()
     }
 }

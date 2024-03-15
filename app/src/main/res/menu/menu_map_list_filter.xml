@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/all_places"
+        android:title="@string/all_places" />
+    <item android:id="@+id/only_without_pictures"
+        android:title="@string/only_without_pictures" />
+    <item android:id="@+id/only_with_pictures"
+        android:title="@string/only_with_pictures" />
+</menu>

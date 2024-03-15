@@ -27,8 +27,8 @@ import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 
 class UserViewModel(private val application: Application) : AndroidViewModel(application) {
     private val repo: UserDataRepo = UserDataRepo(application)
-    private var userData: LiveData<UserData> = repo.getData()
-
+    private var _userData: LiveData<UserData> = repo.getData()
+    val userData get() = _userData
 
     private var userPoint: Point = Point(55.7515, 37.64)
 
@@ -55,9 +55,9 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         }
 
         fusedLocationProviderClient.lastLocation.addOnCompleteListener( application.mainExecutor ) {
-            if (userData.value != null) {
+            if (_userData.value != null) {
                 val location = it.result
-                val tempData = userData.value!!
+                val tempData = _userData.value!!
 
                 tempData.apply {
                     latitude = location.latitude
@@ -65,7 +65,7 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
                 }
 
                 repo.updateData(tempData)
-                userData = repo.getData()
+                _userData = repo.getData()
             }
         }
         return true
@@ -73,7 +73,7 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
 
     fun getUser(): LiveData<UserData> {
         updateData()
-        return userData
+        return _userData
     }
 
     fun login(name : String, userId : String){
@@ -86,31 +86,31 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
     }
 
     fun likePlace(id : String) {
-        if (userData.value != null) {
-            val tempData = userData.value!!
+        if (_userData.value != null) {
+            val tempData = _userData.value!!
             tempData.like(id)
             repo.updateData(tempData)
         }
     }
 
     fun subscribe(id : String) {
-        if (userData.value != null) {
-            val tempData = userData.value!!
+        if (_userData.value != null) {
+            val tempData = _userData.value!!
             tempData.subscribe(id)
             repo.updateData(tempData)
         }
     }
     fun unLikePlace(id : String) {
-        if (userData.value != null) {
-            val tempData = userData.value!!
+        if (_userData.value != null) {
+            val tempData = _userData.value!!
             tempData.unLike(id)
             repo.updateData(tempData)
         }
     }
 
     fun unscribe(id : String) {
-        if (userData.value != null) {
-            val tempData = userData.value!!
+        if (_userData.value != null) {
+            val tempData = _userData.value!!
             tempData.unscribe(id)
             repo.updateData(tempData)
         }

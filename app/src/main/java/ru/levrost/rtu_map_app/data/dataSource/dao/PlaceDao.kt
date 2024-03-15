@@ -14,6 +14,9 @@ interface PlaceDao {
     @Query("SELECT * FROM PlaceEntity")
     fun getAllPlaces(): LiveData<List<PlaceEntity>>?
 
+    @Query("SELECT * FROM PlaceEntity WHERE userName LIKE '%' || :text || '%' OR description LIKE '%' || :text || '%' OR name LIKE '%' || :text || '%'")
+    fun getPlacesByText(text: String): LiveData<List<PlaceEntity>>?
+
     @Query("SELECT COUNT(*) FROM PlaceEntity")
     fun count(): LiveData<Int>?
 

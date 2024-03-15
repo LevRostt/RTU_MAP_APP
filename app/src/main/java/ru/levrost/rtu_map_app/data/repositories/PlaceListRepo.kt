@@ -7,14 +7,14 @@ import androidx.lifecycle.map
 import ru.levrost.rtu_map_app.data.dataSource.entites.PlaceEntity
 import ru.levrost.rtu_map_app.data.dataSource.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.Place
+import java.util.function.Function
 import java.util.stream.Collectors
 
 class PlaceListRepo(private val application: Application) : repository<List<Place>> {
 
     private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(application)
+
     override fun getData(): LiveData<List<Place>> {
-
-
             return dataBaseSource.placeListDao()?.getAllPlaces()?.map { placeList ->
 
                     placeList.stream().map {
@@ -31,6 +31,27 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                             it.icon
                         )
                     }.collect(Collectors.toList())
+
+        } ?: MutableLiveData(ArrayList<Place>() as List<Place>)
+    }
+
+    fun getPlaceByText(text: String) : LiveData<List<Place>>{
+        return dataBaseSource.placeListDao()?.getPlacesByText(text)?.map { placeList ->
+
+            placeList.stream().map {
+                Place(
+                    it.name,
+                    it.idPlace,
+                    it.userName,
+                    it.userId,
+                    it.latitude,
+                    it.longitude,
+                    it.description,
+                    it.likes,
+                    false,
+                    it.icon
+                )
+            }.collect(Collectors.toList())
 
         } ?: MutableLiveData(ArrayList<Place>() as List<Place>)
     }

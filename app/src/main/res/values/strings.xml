@@ -16,4 +16,7 @@
     <string name="place_description">Place description</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="all_places">All places</string>
+    <string name="only_without_pictures">Only without pictures</string>
+    <string name="only_with_pictures">Only with pictures</string>
 </resources>
