@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mapListFragment_to_createPlaceFragment"
             app:destination="@id/createPlaceFragment" />
+        <action
+            android:id="@+id/action_mapListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/createPlaceFragment"
@@ -28,4 +31,14 @@
         android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapSelectedFragment"
         android:label="fragment_map_selected"
         tools:layout="@layout/fragment_map_selected" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="isUser"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
 </navigation>

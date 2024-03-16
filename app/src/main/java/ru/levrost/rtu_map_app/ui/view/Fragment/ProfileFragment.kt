@@ -1,6 +1,7 @@
 package ru.levrost.rtu_map_app.ui.view.Fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.levrost.rtu_map_app.databinding.FragmentProfileBinding
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
@@ -19,6 +21,7 @@ class ProfileFragment: Fragment() {
     private val userViewModel: UserViewModel by activityViewModels<UserViewModel> {
         UserViewModel.Factory
     }
+    private var cardUserProfileId = "0"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +44,17 @@ class ProfileFragment: Fragment() {
                 }
             }
         }
+        else{
+            cardUserProfileId = userViewModel.cardProfileUserData[1]
+            Log.d("LRDebugMess",cardUserProfileId)
+            mBinding.apply {
+                subscribeBtn.visibility = View.VISIBLE
+                jumpBack.visibility = View.VISIBLE
+                exit.visibility = View.GONE
+                personName.text = userViewModel.cardProfileUserData[0]
+            }
+        }
+
 
         mBinding.exit.setOnClickListener {
             requireActivity().getSharedPreferences("UID", AppCompatActivity.MODE_PRIVATE)
@@ -49,6 +63,10 @@ class ProfileFragment: Fragment() {
                 .apply()
             userViewModel.deleteUser()
             (activity as MainActivity).navRestart()
+        }
+
+        mBinding.jumpBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

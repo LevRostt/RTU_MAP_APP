@@ -30,6 +30,9 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
     private var _userData: LiveData<UserData> = repo.getData()
     val userData get() = _userData
 
+    private var _cardProfileUserData = arrayOf("", "") //Данные пользователя фрагмент которого нужно открыть (имя, id)
+    val cardProfileUserData get() = _cardProfileUserData
+
     private var userPoint: Point = Point(55.7515, 37.64)
 
     private val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
@@ -69,6 +72,10 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
             }
         }
         return true
+    }
+
+    fun setCardProfileUserData(name: String, userId: String) {
+        _cardProfileUserData = arrayOf(name, userId)
     }
 
     fun getUser(): LiveData<UserData> {

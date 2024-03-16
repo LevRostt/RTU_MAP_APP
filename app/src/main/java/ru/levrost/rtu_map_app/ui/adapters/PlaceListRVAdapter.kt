@@ -147,6 +147,11 @@ class PlaceListRVAdapter(
             }
         }
 
+        binding.userName.setOnClickListener{
+            userViewModel.setCardProfileUserData(binding.userName.text.toString(), placesList[position].userId)
+            fragment.findNavController().navigate(R.id.action_mapListFragment_to_profileFragment)
+        }
+
         holder.itemView.animation =
             AnimationUtils.loadAnimation(
                 context,

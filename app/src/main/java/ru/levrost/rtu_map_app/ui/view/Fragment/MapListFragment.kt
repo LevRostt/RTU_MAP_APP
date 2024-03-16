@@ -103,7 +103,6 @@ class MapListFragment: Fragment() {
 
     private fun placeVMObserver() = Observer<List<Place>>{l ->
         typeListToRV = l as ArrayList<Place>
-        Log.d("LRDebugMess", typeListToRV.toString())
         when(filterStates){ // do in thread
             0 -> {
                 typeListToRV = ArrayList(l)
@@ -129,13 +128,31 @@ class MapListFragment: Fragment() {
     }
 
     private fun containAndPushList(){
-        val list = searchListToRV.filter {
+        var list = searchListToRV.filter {
             for (i in typeListToRV){
                 if(i.idPlace == it.idPlace)
                     return@filter true
             }
             false
-        } // Можно оптимизировать*
+        } // Можно оптимизировать* | Выполнять в фоне
+
+        val comporator = Comparator<Place>{ place1, place2 ->
+            if (place1.userName > place2.userName){
+                return@Comparator 1
+            }
+            else if (place1.userName == place2.userName){
+                if (place1.likes > place2.likes)
+                    return@Comparator 1
+                else{
+                    return@Comparator -1
+                }
+            }
+            return@Comparator -1
+        }
+
+        if (mBinding.searchView.query.toString() != "")
+            list = list.sortedWith(comporator)
+
         (mBinding.rvMapList.adapter as PlaceListRVAdapter).updateData(list)
     }
 
