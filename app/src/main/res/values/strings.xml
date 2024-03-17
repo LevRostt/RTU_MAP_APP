@@ -19,4 +19,5 @@
     <string name="all_places">All places</string>
     <string name="only_without_pictures">Only without pictures</string>
     <string name="only_with_pictures">Only with pictures</string>
+    <string name="user_already_register">Пользователь уже зарегистрирован</string>
 </resources>

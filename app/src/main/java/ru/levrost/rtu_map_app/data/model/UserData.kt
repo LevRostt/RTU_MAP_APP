@@ -25,6 +25,9 @@ class UserData(val name: String, val userId: String) {
         longitude = _longitude
     }
 
+    override fun toString(): String {
+        return "name = $name ; userId = $userId ; latitude = $latitude ; longitude = $longitude"
+    }
     constructor(userData: UserData): this(userData.name, userData.userId, userData.latitude, userData.longitude, userData.subUsers, userData.likes)
 
     fun subscribe(id : String){

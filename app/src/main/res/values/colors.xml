@@ -6,6 +6,7 @@
     //custom
     <color name="grey">#FF393E46</color>
     <color name="like_color">#FFFD3145</color>
+    <color name="lite_red">#D0FD3145</color>
 
     <color name="brown_for_active_button">#FF5D402E</color>
     <color name="base_brown">#FF8B4F25</color>

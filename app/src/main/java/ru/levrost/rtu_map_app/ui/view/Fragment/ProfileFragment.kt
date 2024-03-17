@@ -11,6 +11,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.levrost.rtu_map_app.databinding.FragmentProfileBinding
+import ru.levrost.rtu_map_app.global.debugLog
+import ru.levrost.rtu_map_app.global.observeOnce
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
@@ -39,7 +41,8 @@ class ProfileFragment: Fragment() {
                 subscribeBtn.visibility = View.GONE
                 jumpBack.visibility = View.GONE
                 exit.visibility = View.VISIBLE
-                userViewModel.getUser().observe(viewLifecycleOwner){
+                userViewModel.getUser().observeOnce(viewLifecycleOwner){
+                    debugLog(it.toString())
                     personName.text = it.name
                 }
             }

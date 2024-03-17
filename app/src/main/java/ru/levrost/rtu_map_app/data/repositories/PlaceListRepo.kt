@@ -31,9 +31,6 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
     private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(application)
     private val serverApi = ApiClient.getClient().create(ServerApi::class.java)
 
-    init {
-
-    }
     private fun getFromServer(){
 
         AppDataBase.databaseWriteExecutor.execute {
@@ -62,7 +59,7 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                     }
                     pushPlaces(list)
                 } else{
-                    Log.d("LRDebugServer", "response " + response.code().toString())
+                    Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
                 }
             }
 

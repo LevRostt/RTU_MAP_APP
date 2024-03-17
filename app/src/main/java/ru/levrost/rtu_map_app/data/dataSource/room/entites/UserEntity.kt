@@ -12,10 +12,10 @@ data class UserEntity(
     val userId: String,
 
     @TypeConverters(ListConvertor::class)
-    val likes: List<String>,
+    val likes: List<String> = emptyList(),
 
     @TypeConverters(ListConvertor::class)
-    val subscribes: List<String>,
+    val subscribes: List<String> = emptyList(),
 
     val latitude: Double = 0.0,
     val longitude: Double = 0.0

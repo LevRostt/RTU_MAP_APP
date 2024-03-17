@@ -10,6 +10,8 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceFromServer
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceToServer
+import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserFromServer
+import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserToServer
 
 interface ServerApi {
 
@@ -24,5 +26,11 @@ interface ServerApi {
         @Part("description") description: RequestBody,
         @Part image: MultipartBody.Part?
     ) : Call<PlaceFromServer>
+
+
+    @POST("/api/auth/register")
+    fun register(
+        @Body user: UserToServer
+    ) : Call<UserFromServer>
 
 }

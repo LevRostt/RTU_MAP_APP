@@ -41,6 +41,10 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         updateData()
     }
 
+    fun register(username: String, password : String){
+        repo.register(username, password)
+    }
+
     private fun updateData() : Boolean{
         if ((ActivityCompat.checkSelfPermission(
                 getApplication(),
