@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import ru.levrost.rtu_map_app.data.dataSource.entites.UserEntity
-import ru.levrost.rtu_map_app.data.dataSource.root.AppDataBase
+import ru.levrost.rtu_map_app.data.dataSource.room.entites.UserEntity
+import ru.levrost.rtu_map_app.data.dataSource.room.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.UserData
 
 class UserDataRepo(private val application: Application) : repository<UserData> {

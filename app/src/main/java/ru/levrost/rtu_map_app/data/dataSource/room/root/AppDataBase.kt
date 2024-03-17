@@ -1,4 +1,4 @@
-package ru.levrost.rtu_map_app.data.dataSource.root
+package ru.levrost.rtu_map_app.data.dataSource.room.root
 
 import android.content.Context
 import androidx.room.Database
@@ -8,15 +8,15 @@ import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteOpenHelper
-import ru.levrost.rtu_map_app.data.dataSource.dao.PlaceDao
-import ru.levrost.rtu_map_app.data.dataSource.dao.UserDao
-import ru.levrost.rtu_map_app.data.dataSource.entites.ListConvertor
-import ru.levrost.rtu_map_app.data.dataSource.entites.PlaceEntity
-import ru.levrost.rtu_map_app.data.dataSource.entites.UserEntity
+import ru.levrost.rtu_map_app.data.dataSource.room.dao.PlaceDao
+import ru.levrost.rtu_map_app.data.dataSource.room.dao.UserDao
+import ru.levrost.rtu_map_app.data.dataSource.room.entites.ListConvertor
+import ru.levrost.rtu_map_app.data.dataSource.room.entites.PlaceEntity
+import ru.levrost.rtu_map_app.data.dataSource.room.entites.UserEntity
 import java.util.concurrent.Executors
 import kotlin.concurrent.Volatile
 
-@Database(entities = [UserEntity::class, PlaceEntity::class], version = 2)
+@Database(entities = [UserEntity::class, PlaceEntity::class], version = 3)
 @TypeConverters(ListConvertor::class)
 abstract class AppDataBase : RoomDatabase() {
 
@@ -40,7 +40,7 @@ abstract class AppDataBase : RoomDatabase() {
             }
             return dbInstance!!
         }
-        private fun builderDB(context: Context) : AppDataBase{
+        private fun builderDB(context: Context) : AppDataBase {
             return databaseBuilder(context.applicationContext, AppDataBase::class.java, "rtu_map_app_database")
                 .fallbackToDestructiveMigration() // Очищает базу данных при не совпадении версий(Заменить на миграцию, если будет необходимость)
                 .build()

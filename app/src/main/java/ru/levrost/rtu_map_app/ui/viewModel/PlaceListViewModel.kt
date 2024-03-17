@@ -2,6 +2,7 @@ package ru.levrost.rtu_map_app.ui.viewModel
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -19,6 +20,7 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
     private val _placeList = repo.getData()
     private val _point : MutableLiveData<Point> = MutableLiveData()
     private val _lastBitMap : MutableLiveData<Bitmap> = MutableLiveData()
+    private val _lastUri : MutableLiveData<Uri?> = MutableLiveData()
 
     val placeList get() = _placeList
 
@@ -53,7 +55,10 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
 
     fun setLastBitMap(bitmap: Bitmap) = _lastBitMap.postValue(bitmap)
 
+    fun setLastUriImage(uri: Uri?) = _lastUri.postValue(uri)
+
     fun getLastBitMap() = _lastBitMap.value
+    fun getLastUri() = _lastUri.value
 
     fun selectPlace(latitude: Double, longitude: Double){ //Переписать реализацию?
         _point.postValue(Point(latitude, longitude))

@@ -117,7 +117,7 @@ class MapFragment: Fragment() {
     private fun jumpToPlace(){
         if (placeListViewModel.selectedPlace() != null && placeListViewModel.selectedPlace()!!.latitude != 0.0){
             mapView!!.map.move(CameraPosition(
-                Point(placeListViewModel.selectedPlace()!!.latitude, placeListViewModel.selectedPlace()!!.longitude), 9.5F, 0.0F, 45F),
+                Point(placeListViewModel.selectedPlace()!!.latitude, placeListViewModel.selectedPlace()!!.longitude), 13.5F, 0.0F, 45F),
                 Animation(Animation.Type.SMOOTH, 2.0F),
                 null)
             placeListViewModel.selectPlace(0.0,0.0)
@@ -133,7 +133,7 @@ class MapFragment: Fragment() {
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                     // Если геолокация выключена, выводим диалоговое окно с запросом на включение
                 val builder = AlertDialog.Builder(context)
-                builder.setMessage("Чтобы получить возможность полноценно взаимодействовать с приложением, пожалуйста, включите геокацию.")
+                builder.setMessage("Чтобы отслеживать своё местоположение в приложении, пожалуйста, включите геокацию.")
                     .setCancelable(false)
                     .setPositiveButton("Включить") { dialog, id -> // Открываем настройки геолокации
                         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,9 +33,8 @@ class PlaceListRVAdapter(
     ) : RecyclerView.Adapter<PlaceListRVAdapter.PlaceListHolder>() {
 
 
-    private var placesList : List<Place> = ArrayList()
+    private var placesList : MutableList<Place> = ArrayList()
     private var userData : UserData? = null
-
 
     class PlaceListHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -56,9 +56,25 @@ class PlaceListRVAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(list: List<Place>){
-        placesList = list
+    fun updateData(newList: List<Place>){
+
+        placesList = newList.toMutableList()
         notifyDataSetChanged()
+
+//        if (placesList.isEmpty() && newList.isNotEmpty()){
+//            placesList = newList.toMutableList()
+//            notifyDataSetChanged()
+//        }
+//        else
+//            for (i in newList.indices) {
+//                if (i > placesList.size - 1) {
+//                    placesList.add(newList[i])
+//                    notifyItemInserted(i)
+//                } else if (newList[i].idPlace != placesList[i].idPlace) {
+//                    placesList[i] = newList[i]
+//                    notifyItemChanged(i)
+//                }
+//            }
     }
 
     fun updateData(data: UserData){
@@ -82,15 +98,23 @@ class PlaceListRVAdapter(
             placeInfo.text = place.description
             countOfLikes.text = place.likes.toString()
 
-            val pic = Base64.getDecoder().decode(place.image)
+            if (place.isPicSaved()){
+//                val pic : ByteArray = Base64.getDecoder().decode(place.image)
+//
+//                placePic.setImageBitmap(
+//                    BitmapFactory.decodeByteArray(
+//                        pic,
+//                        0,
+//                        pic.size
+//                    )
+//                )
 
-            placePic.setImageBitmap(
-                BitmapFactory.decodeByteArray(
-                    pic,
-                    0,
-                    pic.size
-                )
-            )
+                placePic.setImageURI(Uri.parse(place.image))
+            }
+            else{
+                placePic.setImageResource(R.drawable.empty_pic)
+            }
+
 
             if (userData?.likes?.contains(place.idPlace) == true){
                 btnLike.setImageResource(R.drawable.favorite_icon_active)

@@ -1,4 +1,4 @@
-package ru.levrost.rtu_map_app.data.dataSource.dao
+package ru.levrost.rtu_map_app.data.dataSource.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -7,7 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import ru.levrost.rtu_map_app.data.dataSource.entites.UserEntity
+import ru.levrost.rtu_map_app.data.dataSource.room.entites.UserEntity
 
 @Dao
 interface UserDao {

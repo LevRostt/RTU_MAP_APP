@@ -1,4 +1,4 @@
-package ru.levrost.rtu_map_app.data.dataSource.entites
+package ru.levrost.rtu_map_app.data.dataSource.room.entites
 
 import androidx.room.TypeConverter
 import java.util.Arrays

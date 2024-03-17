@@ -3,7 +3,6 @@ package ru.levrost.rtu_map_app.ui.view.Fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
@@ -18,9 +17,11 @@ import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.databinding.MapListFragmentBinding
+import ru.levrost.rtu_map_app.global.observeOnce
 import ru.levrost.rtu_map_app.ui.adapters.PlaceListRVAdapter
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
+import java.lang.Exception
 
 class MapListFragment: Fragment() {
     private var _binding: MapListFragmentBinding? = null
@@ -46,6 +47,8 @@ class MapListFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = MapListFragmentBinding.inflate(inflater, container, false)
+
+        placeListViewModel.setLastUriImage(null)//обнуление поля
 
         mBinding.btnToAddPlace.setOnClickListener {
             findNavController().navigate(R.id.action_mapListFragment_to_createPlaceFragment)
@@ -78,15 +81,15 @@ class MapListFragment: Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null) {
-                    placeListViewModel.getPlaceByText(newText).observe(viewLifecycleOwner){
+                if (newText != null && newText != "") {
+                    placeListViewModel.getPlaceByText(newText).observeOnce(viewLifecycleOwner){
                         searchListToRV = it as ArrayList<Place>
                         containAndPushList()
-                        placeListViewModel.getPlaceByText(newText).removeObservers(viewLifecycleOwner)
                     }
                 }
-                else
+                else {
                     searchListToRV = typeListToRV
+                }
                 containAndPushList()
                 return true
             }
@@ -104,9 +107,6 @@ class MapListFragment: Fragment() {
     private fun placeVMObserver() = Observer<List<Place>>{l ->
         typeListToRV = l as ArrayList<Place>
         when(filterStates){ // do in thread
-            0 -> {
-                typeListToRV = ArrayList(l)
-            }
             1 -> {
                 typeListToRV = typeListToRV.filter { !it.isPicSaved()  } as ArrayList<Place>
             }
@@ -124,34 +124,43 @@ class MapListFragment: Fragment() {
 
         userViewModel.getUser().observe(viewLifecycleOwner, userVMObserver())
         placeListViewModel.placeList.observe(viewLifecycleOwner, placeVMObserver())
-
     }
 
     private fun containAndPushList(){
+
         var list = searchListToRV.filter {
-            for (i in typeListToRV){
-                if(i.idPlace == it.idPlace)
-                    return@filter true
+            if (filterStates == 0)
+                true
+            else {
+                for (i in typeListToRV) {
+                    if (i.idPlace == it.idPlace)
+                        return@filter true
+                }
+                false
             }
-            false
         } // Можно оптимизировать* | Выполнять в фоне
 
-        val comporator = Comparator<Place>{ place1, place2 ->
-            if (place1.userName > place2.userName){
-                return@Comparator 1
-            }
-            else if (place1.userName == place2.userName){
-                if (place1.likes > place2.likes)
+        val compRV = Comparator<Place>{ place1, place2 ->
+            try {
+                if (place1.userName > place2.userName){
                     return@Comparator 1
-                else{
-                    return@Comparator -1
                 }
-            }
+                else if (place1.userName == place2.userName){
+                    if (place1.likes < place2.likes)
+                        return@Comparator 1
+                    else if (place1.likes == place2.likes){
+                        return@Comparator 0
+                    }
+                    else {
+                        return@Comparator -1
+                    }
+                }
+            }catch (_ : Exception){}
             return@Comparator -1
         }
 
-        if (mBinding.searchView.query.toString() != "")
-            list = list.sortedWith(comporator)
+        if (mBinding.searchView.query.toString() != "" && list.isNotEmpty())
+            list = list.sortedWith(compRV)
 
         (mBinding.rvMapList.adapter as PlaceListRVAdapter).updateData(list)
     }
