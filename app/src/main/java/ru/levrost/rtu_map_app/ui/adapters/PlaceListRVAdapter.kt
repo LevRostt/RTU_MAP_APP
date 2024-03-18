@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,8 @@ import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.databinding.MapListPlaceBinding
+import ru.levrost.rtu_map_app.global.isInternetAvailable
+import ru.levrost.rtu_map_app.global.observeOnce
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 import ru.levrost.rtu_map_app.ui.view.Fragment.MapListFragment
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
@@ -35,6 +39,12 @@ class PlaceListRVAdapter(
 
     private var placesList : MutableList<Place> = ArrayList()
     private var userData : UserData? = null
+
+    init {
+        userViewModel.getUser().observeOnce(fragment.viewLifecycleOwner){
+            userData = it
+        }
+    }
 
     class PlaceListHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -77,10 +87,6 @@ class PlaceListRVAdapter(
 //            }
     }
 
-    fun updateData(data: UserData){
-        userData = data
-    }
-
     override fun getItemCount(): Int {
         return placesList.size
     }
@@ -115,38 +121,68 @@ class PlaceListRVAdapter(
                 placePic.setImageResource(R.drawable.empty_pic)
             }
 
+            if (userData?.name == place.userName){
+                btnDelete.visibility = View.VISIBLE
+            }
 
-            if (userData?.likes?.contains(place.idPlace) == true){
+            if (userData?.likes?.contains(place.idPlace) == true || place.isLiked){
                 btnLike.setImageResource(R.drawable.favorite_icon_active)
             }
 
         }
 
         binding.btnLike.setOnClickListener {
-            var intUserId : Int? = null
-            try{
-                intUserId = userData?.userId?.toInt()
-            }
-            catch (_: NumberFormatException){}
 
-            if (intUserId == null || intUserId == 0){
-                loginRequest()
-            }
-            else {
-                if (userData?.likes?.contains(place.idPlace) == false) {
-                    //add like
-                    userViewModel.likePlace(place.idPlace)
-                    placeListViewModel.likePlace(position)
-                    binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
-                    binding.countOfLikes.text =
-                        (binding.countOfLikes.text.toString().toInt() + 1).toString()
+            val userId = userData?.userId
+
+            if (isInternetAvailable(context)) {
+                if (userId == null || userId == "0" || userId == "-1") {
+                    loginRequest()
                 } else {
-                    userViewModel.unLikePlace(place.idPlace)
-                    placeListViewModel.unLikePlace(position)
-                    binding.btnLike.setImageResource(R.drawable.favorite_icon)
-                    binding.countOfLikes.text =
-                        (binding.countOfLikes.text.toString().toInt() - 1).toString()
+                    if (!place.isLiked || !placesList[position].isLiked) {
+                        //userViewModel.likePlace(place.idPlace)
+                        placeListViewModel.likePlace(place.idPlace)
+                        binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
+                        binding.countOfLikes.text =
+                            (binding.countOfLikes.text.toString().toInt() + 1).toString()
+                        placesList[position].liked()
+                    } else {
+                        //userViewModel.unLikePlace(place.idPlace)
+                        placeListViewModel.unLikePlace(place.idPlace)
+                        binding.btnLike.setImageResource(R.drawable.favorite_icon)
+                        binding.countOfLikes.text =
+                            (binding.countOfLikes.text.toString().toInt() - 1).toString()
+                        placesList[position].unLiked()
+                    }
                 }
+            } else {
+                Toast.makeText(
+                    context,
+                    "Failed to send data. Check Internet access",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        binding.btnDelete.setOnClickListener {
+            val userId = userData?.userId
+
+            if (isInternetAvailable(context)){
+                if (userId == null || userId == "0" || userId == "-1"){
+                    loginRequest()
+                }
+                else{
+                    placeListViewModel.deletePlace(place.idPlace)
+                    notifyItemRemoved(position)
+                }
+            }
+
+            else {
+                Toast.makeText(
+                    context,
+                    "Failed to send data. Check Internet access",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -155,21 +191,6 @@ class PlaceListRVAdapter(
             fragment.findNavController().popBackStack()
         }
 
-        binding.btnDelete.setOnClickListener {
-            // delete
-            var intUserId : Int? = null
-            try{
-                intUserId = userData?.userId?.toInt()
-            }
-            catch (_: NumberFormatException){}
-
-            if (intUserId == null || intUserId == 0){
-                loginRequest()
-            }
-            else{
-                placeListViewModel.deletePlace(place.idPlace)
-            }
-        }
 
         binding.userName.setOnClickListener{
             userViewModel.setCardProfileUserData(binding.userName.text.toString(), placesList[position].userId)

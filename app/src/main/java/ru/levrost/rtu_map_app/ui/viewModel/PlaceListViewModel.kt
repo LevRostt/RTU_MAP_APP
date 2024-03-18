@@ -37,20 +37,18 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
         repo.addPlace(Place(name, idPlace, userName, userId, latitude, longitude, description, likes, isLiked, image))
     }
 
-    fun likePlace(id : Int){ // работать только если есть интернет
-        val place = _placeList.value!!.get(id)
-        place.likes++
+    fun likePlace(id : String){ // работать только если есть интернет
+        repo.likePlace(id)
         // отключить при отстутвии интернета
     }
 
-    fun unLikePlace(id : Int){ // работать только если есть интернет
-        val place = _placeList.value!!.get(id)
-        place.likes++
+    fun unLikePlace(id : String){ // работать только если есть интернет
+        repo.unLikePlace(id)
         // отключить при отстутвии интернета
     }
 
     fun deletePlace(id : String){ //Функциональность только если есть интернет
-
+        repo.deletePlace(id)
     }
 
     fun setLastBitMap(bitmap: Bitmap) = _lastBitMap.postValue(bitmap)

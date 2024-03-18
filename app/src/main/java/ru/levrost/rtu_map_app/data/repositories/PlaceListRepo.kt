@@ -72,9 +72,9 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                     }
                     pushPlaces(list)
 
-                    Log.d("LRDebugServer", "${response.body()} ; ${response.errorBody()?.string()} ")
+                    Log.d("LRDebugServer", "Get ${response.body()} ; ${response.errorBody()?.string()} ")
                 } else{
-                    Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
+                    Log.d("LRDebugServer", "Get response ${response.code()} ; ${response.errorBody()?.string()} ")
                 }
             }
 
@@ -128,9 +128,9 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                         responsePlace.image
                     )
                     addPlaceToDataBase(placeToAdd)
-                    Log.d("LRDebugServer", "response $placeToAdd ")
+                    Log.d("LRDebugServer", "Post response $placeToAdd ")
                 } else{
-                    Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
+                    Log.d("LRDebugServer", "Post response ${response.code()} ; ${response.errorBody()?.string()} ")
                 }
             }
 
@@ -138,6 +138,61 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                 Log.d("LRDebugServer", "Failed: $t ;")
             }
 
+        })
+    }
+
+    private fun likeToServer(id : String){
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
+
+        serverApi.like(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+            override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
+                if (response.isSuccessful){
+                    Log.d("LRDebugServer", "Like response ${response.body()!!} ")
+                } else{
+                    Log.d("LRDebugServer", "Like response ${response.code()} ; ${response.errorBody()?.string()} ")
+                }
+            }
+
+            override fun onFailure(call: Call<PlaceFromServer>, t: Throwable) {
+                Log.d("LRDebugServer", "Failed: $t ;")
+            }
+
+        })
+    }
+
+    private fun unLikeToServer(id : String){
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
+
+        serverApi.unlike(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+            override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
+                if (response.isSuccessful){
+                    Log.d("LRDebugServer", "Unlike response ${response.code()} ")
+                } else{
+                    Log.d("LRDebugServer", "Unlike response ${response.code()} ; ${response.errorBody()?.string()} ")
+                }
+            }
+
+            override fun onFailure(call: Call<PlaceFromServer>, t: Throwable) {
+                Log.d("LRDebugServer", "Failed: $t ;")
+            }
+        })
+    }
+
+    private fun deleteToServer(id : String){
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
+
+        serverApi.delete(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+            override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
+                if (response.isSuccessful){
+                    Log.d("LRDebugServer", "Delete response ${response.code()} ")
+                } else{
+                    Log.d("LRDebugServer", "Delete response ${response.code()} ; ${response.errorBody()?.string()} ")
+                }
+            }
+
+            override fun onFailure(call: Call<PlaceFromServer>, t: Throwable) {
+                Log.d("LRDebugServer", "Failed: $t ;")
+            }
         })
     }
 
@@ -182,8 +237,20 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
         } ?: MutableLiveData(ArrayList<Place>() as List<Place>)
     }
 
+
+    fun likePlace(id : String){
+        likeToServer(id)
+    }
+
+    fun unLikePlace(id : String){
+        unLikeToServer(id)
+    }
+
+    fun deletePlace(id : String){
+        deleteToServer(id)
+    }
+
     fun addPlace(data : Place) {
-        //post to server
         postToServer(data)
     }
 
@@ -195,9 +262,7 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
 
     fun pushPlaces(data : List<Place>) {
         if (data.isNotEmpty()) {
-
             AppDataBase.databaseWriteExecutor.execute {
-
                 dataBaseSource.placeListDao()?.replacePlaces(
                     data.map {
                         PlaceEntity(

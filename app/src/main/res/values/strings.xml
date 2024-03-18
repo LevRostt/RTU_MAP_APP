@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">RTU_MAP_APP</string>
     <string name="btn_log">Login</string>
     <string name="btn_log_without_acc">Login without account</string>
@@ -14,11 +14,12 @@
     <string name="input_place_name">Place name</string>
     <string name="select_on_the_map">Select on\nthe map:</string>
     <string name="place_description">Place description</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="all_places">All places</string>
     <string name="only_without_pictures">Only without pictures</string>
     <string name="only_with_pictures">Only with pictures</string>
-    <string name="user_already_register">Пользователь уже зарегистрирован</string>
-    <string name="login_error">Данные введены не верно</string>
+    <string name="user_already_register">User already registered</string>
+    <string name="login_error">Data entered incorrectly</string>
+
 </resources>

@@ -5,12 +5,14 @@ import okhttp3.RequestBody
 import retrofit2.http.GET
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceFromServer
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceToServer
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserFromServer
@@ -35,7 +37,7 @@ interface ServerApi {
     ) : Call<PlaceFromServer>
 
 
-    @POST("/api/auth/register")
+    @POST("auth/register")
     fun register(
         @Body user: UserToServer
     ) : Call<UserFromServer>
@@ -46,4 +48,22 @@ interface ServerApi {
         @Field("username") name : String,
         @Field("password") password : String
     ) : Call<UserTokenFromServer>
+
+    @POST("tags/{tag_id}/likes")
+    fun like(
+        @Header("Authorization") accessToken : String,
+        @Path("tag_id") tagId : String
+    ) : Call<PlaceFromServer>
+
+    @DELETE("tags/{tag_id}/likes")
+    fun unlike(
+        @Header("Authorization") accessToken : String,
+        @Path("tag_id") tagId : String
+    ) : Call<PlaceFromServer>
+
+    @DELETE("tags/{tag_id}")
+    fun delete(
+        @Header("Authorization") accessToken : String,
+        @Path("tag_id") tagId : String
+    ) : Call<PlaceFromServer>
 }

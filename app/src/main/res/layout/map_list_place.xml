@@ -53,6 +53,7 @@
             android:layout_height="32dp"
             android:layout_weight="0"
             android:scaleType="fitCenter"
+            android:visibility="gone"
             android:src="@drawable/delete_icon"
             android:background="@color/light_beige_main_theme"
             android:layout_gravity="center_vertical"/>
