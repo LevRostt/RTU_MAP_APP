@@ -24,12 +24,13 @@ import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class RegisterFragment: Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val mBinding get() = _binding!!
-    val executor = Executors.newScheduledThreadPool(2)
+    private var executor : ScheduledExecutorService? = null
     private val userViewModel: UserViewModel by activityViewModels<UserViewModel> {
         UserViewModel.Factory
     }
@@ -39,8 +40,6 @@ class RegisterFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        debugLog(userViewModel.userData.value?.userId.toString())
-
         return mBinding.root
     }
 
@@ -48,6 +47,8 @@ class RegisterFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mBinding.btnReg.setOnClickListener {
+
+
 
             mBinding.progressBar.visibility = View.VISIBLE
 
@@ -60,22 +61,23 @@ class RegisterFragment: Fragment() {
                     .show()
             } else{
                 userViewModel.register(mBinding.loginField.editText?.text.toString(), mBinding.passwordFiled.editText?.text.toString())
+                executor = Executors.newScheduledThreadPool(2)
 
-                executor.schedule({
+                executor!!.schedule({
                     mBinding.userAlreadyReg.visibility = View.VISIBLE
                 }, 900, TimeUnit.MILLISECONDS)
-                executor.schedule({
+                executor!!.schedule({
                     mBinding.progressBar.visibility = View.GONE
                 }, 1000, TimeUnit.MILLISECONDS)
 
                 userViewModel.getUser().observe(viewLifecycleOwner){
                     val sharePref = requireActivity().getSharedPreferences(
-                        "UID",
+                        "UNAME",
                         AppCompatActivity.MODE_PRIVATE
                     )
-                    val userId = sharePref.getString("id", "0")
+                    val userName = sharePref.getString("name", "-1")
                     // чек интернета
-                    if (sharePref.getString("id", "0") != "0" && sharePref.getString("id", "0") != "-1") {
+                    if (userName != "0" && userName != "-1") {
                         debugLog(it.userId + " " + it.name)
                         mBinding.progressBar.visibility = View.GONE
                         mBinding.userAlreadyReg.visibility = View.INVISIBLE
@@ -90,7 +92,7 @@ class RegisterFragment: Fragment() {
     override fun onStop() {
         super.onStop()
         userViewModel.getUser().removeObservers(viewLifecycleOwner)
-        executor.shutdown()
+        executor?.shutdown()
     }
     override fun onDestroyView() {
         _binding = null

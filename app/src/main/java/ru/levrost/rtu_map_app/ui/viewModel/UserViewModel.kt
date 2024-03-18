@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
 import androidx.fragment.app.activityViewModels
@@ -44,6 +45,11 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
     fun register(username: String, password : String){
         repo.register(username, password)
     }
+
+    fun login(username: String, password: String){
+        repo.login(username, password)
+    }
+
 
     private fun updateData() : Boolean{
         if ((ActivityCompat.checkSelfPermission(
@@ -87,8 +93,12 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         return _userData
     }
 
-    fun login(name : String, userId : String){
-        val tempData = UserData(name, userId)
+    fun loginAsGuest(){
+        val tempData = UserData("guest", "0")
+        application.getSharedPreferences("UNAME", AppCompatActivity.MODE_PRIVATE)
+            .edit()
+            .putString("name", "0")
+            .apply()
         repo.updateData(tempData)
     }
 

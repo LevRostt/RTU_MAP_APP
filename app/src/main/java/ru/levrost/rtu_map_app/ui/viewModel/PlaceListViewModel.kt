@@ -66,6 +66,11 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
 
     fun selectedPlace() = _point.value //Аналогично переписать?
 
+    override fun onCleared() {
+        super.onCleared()
+//        repo.executor?.shutdown()
+    }
+
     companion object{
         val Factory: ViewModelProvider.Factory = object :  ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

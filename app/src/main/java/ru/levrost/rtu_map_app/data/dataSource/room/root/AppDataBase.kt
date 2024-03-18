@@ -16,7 +16,7 @@ import ru.levrost.rtu_map_app.data.dataSource.room.entites.UserEntity
 import java.util.concurrent.Executors
 import kotlin.concurrent.Volatile
 
-@Database(entities = [UserEntity::class, PlaceEntity::class], version = 3)
+@Database(entities = [UserEntity::class, PlaceEntity::class], version = 2)
 @TypeConverters(ListConvertor::class)
 abstract class AppDataBase : RoomDatabase() {
 

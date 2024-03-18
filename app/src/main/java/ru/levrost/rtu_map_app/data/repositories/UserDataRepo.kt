@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import okhttp3.internal.userAgent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,6 +14,7 @@ import ru.levrost.rtu_map_app.data.dataSource.retrofit.ApiClient
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.ServerApi
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserFromServer
 import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserToServer
+import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.UserTokenFromServer
 import ru.levrost.rtu_map_app.data.dataSource.room.entites.UserEntity
 import ru.levrost.rtu_map_app.data.dataSource.room.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.UserData
@@ -23,7 +25,6 @@ class UserDataRepo(private val application: Application) : repository<UserData> 
 
 
     override fun getData(): LiveData<UserData> {
-        Log.d("MyDebugMess", dataBaseSource.toString()+ " " + dataBaseSource.userDao().toString())
         return dataBaseSource.userDao()?.getData()?.map { userEntity ->
             UserData(userEntity.name, userEntity.userId, userEntity.latitude, userEntity.longitude,userEntity.subscribes, userEntity.likes)
         } ?: MutableLiveData(UserData("none", "-1"))
@@ -35,20 +36,53 @@ class UserDataRepo(private val application: Application) : repository<UserData> 
             override fun onResponse(call: Call<UserFromServer>, response: Response<UserFromServer>) {
                 if (response.isSuccessful){
                     val user = response.body()!!
-                    application.getSharedPreferences(
-                        "UID",
-                        AppCompatActivity.MODE_PRIVATE
-                    )
-                        .edit()
-                        .putString("id", user.id)
-                        .apply()
-                    updateData(user)
+//                    application.getSharedPreferences(
+//                        "UNAME",
+//                        AppCompatActivity.MODE_PRIVATE
+//                    )
+//                        .edit()
+//                        .putString("name", user.username)
+//                        .apply()
+
+                    login(username, password)
                 } else{
                     Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
                 }
             }
 
             override fun onFailure(call: Call<UserFromServer>, t: Throwable) {
+                Log.d("LRDebugServer", "Failed $t")
+            }
+
+        })
+    }
+
+    fun login(username: String, password: String){
+        serverApi.login(username, password).enqueue(object : Callback<UserTokenFromServer>{
+            override fun onResponse(
+                call: Call<UserTokenFromServer>,
+                response: Response<UserTokenFromServer>
+            ) {
+                if (response.isSuccessful){
+                    val user = response.body()!!
+                    application.getSharedPreferences(
+                        "UNAME",
+                        AppCompatActivity.MODE_PRIVATE
+                    )
+                        .edit()
+                        .putString("name", username)
+                        .putString("access_token", user.access_token)
+                        .putString("token_type", user.token_type)
+                        .apply()
+
+                    updateData(UserData(username, user.access_token))
+                    //add to sharedpref token?
+                } else{
+                    Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
+                }
+            }
+
+            override fun onFailure(call: Call<UserTokenFromServer>, t: Throwable) {
                 Log.d("LRDebugServer", "Failed $t")
             }
 
@@ -68,7 +102,14 @@ class UserDataRepo(private val application: Application) : repository<UserData> 
     }
 
     fun deleteData() {
+        application.getSharedPreferences("UNAME", AppCompatActivity.MODE_PRIVATE)
+            .edit()
+            .putString("access_token", null)
+            .putString("token_type", null)
+            .putString("name", "-1")
+            .apply()
         updateData(UserData("none", "-1"))
     }
+
 
 }

@@ -49,10 +49,9 @@ class MapFragment: Fragment() {
 
     private var _binding: MapFragmentBinding? = null
     private val mBinding get() = _binding!!
-    private val userViewModel: UserViewModel by viewModels {
+    private val userViewModel: UserViewModel by activityViewModels<UserViewModel> {
         UserViewModel.Factory
     }
-
 
     private val placeListViewModel: PlaceListViewModel by activityViewModels<PlaceListViewModel> {
         PlaceListViewModel.Factory

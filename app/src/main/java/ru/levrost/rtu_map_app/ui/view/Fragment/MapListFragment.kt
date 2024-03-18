@@ -170,7 +170,6 @@ class MapListFragment: Fragment() {
         popup.menuInflater.inflate(menuRes, popup.menu)
 
         popup.setOnMenuItemClickListener {
-            Log.d("LRDebugMess", it.title.toString() + " id")
             when (it.title) {
                 getString(R.string.all_places) -> filterStates = 0
                 getString(R.string.only_without_pictures) -> filterStates = 1

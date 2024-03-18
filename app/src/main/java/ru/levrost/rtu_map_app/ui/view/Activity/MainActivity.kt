@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.yandex.mapkit.MapKitFactory
 import ru.levrost.rtu_map_app.R
+import ru.levrost.rtu_map_app.global.debugLog
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
 
@@ -100,9 +101,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isLogin(): Boolean {
-        val uId = getSharedPreferences("UID", MODE_PRIVATE).getString("id", "-1")
-        Log.d("MyDebugMess", uId.toString())
-        return uId != "-1"
+        val uName = getSharedPreferences("UNAME", MODE_PRIVATE).getString("name", "-1")
+        debugLog("uName on activity = $uName")
+        return uName != "-1"
     }
 
     private fun isStartDestination(destination: NavDestination?) : Boolean{

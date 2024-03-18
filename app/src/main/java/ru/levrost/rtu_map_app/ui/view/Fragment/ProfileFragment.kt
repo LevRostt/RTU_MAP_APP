@@ -60,10 +60,6 @@ class ProfileFragment: Fragment() {
 
 
         mBinding.exit.setOnClickListener {
-            requireActivity().getSharedPreferences("UID", AppCompatActivity.MODE_PRIVATE)
-                .edit()
-                .putString("id", "-1")
-                .apply()
             userViewModel.deleteUser()
             (activity as MainActivity).navRestart()
         }

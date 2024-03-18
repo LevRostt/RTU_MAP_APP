@@ -6,6 +6,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import ru.levrost.rtu_map_app.data.dataSource.room.entites.PlaceEntity
 
 @Dao
@@ -25,6 +26,12 @@ interface PlaceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun pushPlace(place: List<PlaceEntity>)
+
+    @Transaction
+    fun replacePlaces(place : List<PlaceEntity>) {
+        clearData()
+        pushPlace(place)
+    }
 
     @Delete
     fun deletePlace(place: PlaceEntity)

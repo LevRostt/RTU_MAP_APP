@@ -1,9 +1,9 @@
 package ru.levrost.rtu_map_app.data.repositories
 
-import android.R.attr.description
 import android.app.Application
 import android.net.Uri
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -22,7 +22,12 @@ import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceToServer
 import ru.levrost.rtu_map_app.data.dataSource.room.entites.PlaceEntity
 import ru.levrost.rtu_map_app.data.dataSource.room.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.Place
+import ru.levrost.rtu_map_app.global.debugLog
 import java.io.File
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
+
 import java.util.stream.Collectors
 
 
@@ -31,15 +36,23 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
     private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(application)
     private val serverApi = ApiClient.getClient().create(ServerApi::class.java)
 
+    private val sharedPref = application.getSharedPreferences(
+        "UNAME",
+        AppCompatActivity.MODE_PRIVATE
+    )
+
+    init {
+        getFromServer()
+    }
+
     private fun getFromServer(){
 
-        AppDataBase.databaseWriteExecutor.execute {
-            dataBaseSource.placeListDao()?.clearData() //отключить, если нет интернета
-        }
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "") //!
 
-        serverApi.getPlaces().enqueue(object : Callback<List<PlaceFromServer>>{
+        serverApi.getPlaces(accessToken).enqueue(object : Callback<List<PlaceFromServer>>{
             override fun onResponse(call: Call<List<PlaceFromServer>>, response: Response<List<PlaceFromServer>>) {
                 if (response.isSuccessful){
+
                     val list : ArrayList<Place> = ArrayList()
                     for (place in response.body()!!){
                         list.add(
@@ -58,6 +71,8 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                         )
                     }
                     pushPlaces(list)
+
+                    Log.d("LRDebugServer", "${response.body()} ; ${response.errorBody()?.string()} ")
                 } else{
                     Log.d("LRDebugServer", "response ${response.code()} ; ${response.errorBody()?.string()} ")
                 }
@@ -72,7 +87,6 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
 
     private fun postToServer(place : Place){
         val placeToServer = PlaceToServer(place.latitude, place.longitude, place.name, place.image)
-        Log.d("LRDebugServer", " $placeToServer ")
 
         val latitude = placeToServer.latitude.toString().toRequestBody("text/plain".toMediaType())
         val longitude = placeToServer.longitude.toString().toRequestBody("text/plain".toMediaType())
@@ -85,16 +99,19 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
 
             val imageFile = File(application.cacheDir, "imageFile").apply { createNewFile() }
 
-            inputStream.use { inputStream ->
+            inputStream.use { stream ->
                 imageFile.outputStream().use { fileOut ->
-                    inputStream?.copyTo(fileOut)
+                    stream?.copyTo(fileOut)
                 }
             }
+
             val requestBody = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
             image = MultipartBody.Part.createFormData("image", imageFile.name, requestBody)
         }
 
-        serverApi.postPlace(latitude, longitude, description, image).enqueue(object : Callback<PlaceFromServer>{
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
+
+        serverApi.postPlace(accessToken, latitude, longitude, description, image).enqueue(object : Callback<PlaceFromServer>{
             override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
                 if (response.isSuccessful){
                     val responsePlace = response.body()!!
@@ -125,8 +142,6 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
     }
 
     override fun getData(): LiveData<List<Place>> {
-        getFromServer()
-
         return dataBaseSource.placeListDao()?.getAllPlaces()?.map { placeList ->
             placeList.stream().map {
                 Place(
@@ -138,7 +153,7 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
                     it.longitude,
                     it.description,
                     it.likes,
-                    false,
+                    it.isLike,
                     it.icon
                 )
             }.collect(Collectors.toList())
@@ -146,7 +161,7 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
     }
 
     fun getPlaceByText(text: String) : LiveData<List<Place>>{
-//        getFromServer()
+        getFromServer()
 
         return dataBaseSource.placeListDao()?.getPlacesByText(text)?.map { placeList ->
             placeList.stream().map {
@@ -167,12 +182,9 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
         } ?: MutableLiveData(ArrayList<Place>() as List<Place>)
     }
 
-
-
     fun addPlace(data : Place) {
         //post to server
         postToServer(data)
-
     }
 
     fun addPlaceToDataBase(data : Place){
@@ -182,17 +194,32 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
     }
 
     fun pushPlaces(data : List<Place>) {
-        AppDataBase.databaseWriteExecutor.execute {
-            dataBaseSource.placeListDao()?.pushPlace(
-                data.map { PlaceEntity(it.name, it.idPlace, it.description, it.image, it.userName, it.userId, it.likes, it.latitude, it.longitude, it.isLiked) }
-            )
+        if (data.isNotEmpty()) {
+
+            AppDataBase.databaseWriteExecutor.execute {
+
+                dataBaseSource.placeListDao()?.replacePlaces(
+                    data.map {
+                        PlaceEntity(
+                            it.name,
+                            it.idPlace,
+                            it.description,
+                            it.image,
+                            it.userName,
+                            it.userId,
+                            it.likes,
+                            it.latitude,
+                            it.longitude,
+                            it.isLiked
+                        )
+                    }
+                )
+            }
         }
     }
 
-    fun size() : LiveData<Int>? = dataBaseSource.placeListDao()?.count()
+//    fun size() : LiveData<Int>? = dataBaseSource.placeListDao()?.count()
 
-    fun deleteData() {
-
-    }
+//    fun deleteData() {}
 
 }
