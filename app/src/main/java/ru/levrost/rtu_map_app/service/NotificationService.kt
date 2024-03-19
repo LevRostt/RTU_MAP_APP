@@ -55,7 +55,7 @@ class NotificationService : Service() {
                     placeRepo?.getFromServer()
                     delay(1000)
                     cheackUpdateData()
-                    delay(5000) // to release change to 15-20s
+                    delay(15000)
                 }
             }
 
@@ -74,17 +74,17 @@ class NotificationService : Service() {
         val subscribe = userRepo?.cacheData?.subUsers
         val newList = placeRepo?.cacheData
 
-        if (oldList != null && oldList!!.size != newList!!.size) {
+        debugLog(subscribe.toString())
+
+        if (oldList != null && subscribe != null && oldList!!.size != newList!!.size) {
 
             val uniquePlaceList = newList.filter {newPlace -> //Получаем уникальные места которых ранее не было*
                 !oldList!!.any { oldPlace ->
                     oldPlace.idPlace == newPlace.idPlace
-                } && subscribe!!.any {userId ->
+                } && subscribe.any {userId ->
                     newPlace.userId == userId
                 }
             }
-
-            debugLog(uniquePlaceList.toString())
 
             for (place in uniquePlaceList){
                 createNotification(place.userName)
@@ -151,6 +151,8 @@ class NotificationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         job.cancel()
+        PlaceListRepo.detach()
+        UserDataRepo.detach()
         placeRepo = null
         userRepo = null
         isServiceRunning = false

@@ -92,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     fun navRestart(){
+        userViewModel.getUser().observe(this){}
 
         navTopestController = (supportFragmentManager
             .findFragmentById(R.id.mainGraphContainer) as NavHostFragment)

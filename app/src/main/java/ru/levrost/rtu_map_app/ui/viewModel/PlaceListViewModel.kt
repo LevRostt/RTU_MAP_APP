@@ -38,6 +38,10 @@ class PlaceListViewModel (private val application: Application) : AndroidViewMod
         repo.addPlace(place)
     }
 
+    fun getUrl(link: String) : String{
+        return repo.getUrl(link)
+    }
+
     fun addPlace(name: String, idPlace: String, userName: String, userId: String, latitude: Double, longitude : Double,
                  description: String, likes: Int, isLiked: Boolean, image: String){
         repo.addPlace(Place(name, idPlace, userName, userId, latitude, longitude, description, likes, isLiked, image))

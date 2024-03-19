@@ -57,7 +57,8 @@ class ProfileFragment: Fragment() {
                 else {
                     subscribeBtn.visibility = View.VISIBLE
                     if (userViewModel.getCachedUser()?.subUsers?.contains(cardUserProfileId) == true) {
-
+                        mBinding.subscribeBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.secondary_button)
+                        mBinding.subscribeBtn.text = ContextCompat.getString(requireContext(), R.string.unsubscribe)
                     }
                 }
 
@@ -86,7 +87,7 @@ class ProfileFragment: Fragment() {
     }
 
     private fun subscribe() {
-        userViewModel.userData.observe(viewLifecycleOwner){
+        userViewModel.userData.observeOnce(viewLifecycleOwner){
             if (it.subUsers.contains(cardUserProfileId)){
                 mBinding.subscribeBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.main_button)
                 userViewModel.unscribe(cardUserProfileId)

@@ -38,6 +38,10 @@ class UserDataRepo private constructor(private val context: Application) {
         fun getInstance(): UserDataRepo?{
             return _instance
         }
+
+        fun detach(){
+            _instance = null
+        }
     }
 
     fun getData(): LiveData<UserData> {
@@ -49,8 +53,7 @@ class UserDataRepo private constructor(private val context: Application) {
     }
 
     fun register(username : String, password : String){
-        serverApi.register(UserToServer(username, password)).enqueue(object :
-            Callback<UserFromServer> {
+        serverApi.register(UserToServer(username, password)).enqueue(object : Callback<UserFromServer> {
             override fun onResponse(call: Call<UserFromServer>, response: Response<UserFromServer>) {
                 if (response.isSuccessful){
                     login(username, password)

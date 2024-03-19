@@ -24,6 +24,7 @@ import ru.levrost.rtu_map_app.data.dataSource.room.entites.PlaceEntity
 import ru.levrost.rtu_map_app.data.dataSource.room.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
+import ru.levrost.rtu_map_app.global.debugLog
 import java.io.File
 
 import java.util.stream.Collectors
@@ -55,14 +56,22 @@ class PlaceListRepo private constructor(private val context: Application) {
             return _instance
         }
 
+        fun detach(){
+            _instance = null
+        }
+
     }
 
     init {
         getFromServer()
     }
 
-    fun getFromServer(){
 
+    fun getUrl(link : String) : String{
+        debugLog(ApiClient.SHORT_URL + link)
+        return ApiClient.SHORT_URL + link
+    }
+    fun getFromServer(){
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
         serverApi.getPlaces(accessToken).enqueue(object : Callback<List<PlaceFromServer>>{
