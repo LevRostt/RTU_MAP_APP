@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.util.Log
@@ -24,10 +25,11 @@ import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.geometry.Point
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.data.repositories.UserDataRepo
+import ru.levrost.rtu_map_app.service.NotificationService
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 
 class UserViewModel(private val application: Application) : AndroidViewModel(application) {
-    private val repo: UserDataRepo = UserDataRepo(application)
+    private val repo: UserDataRepo = UserDataRepo.getInstance(application)
     private var _userData: LiveData<UserData> = repo.getData()
     val userData get() = _userData
 
@@ -93,6 +95,10 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         return _userData
     }
 
+    fun getCachedUser() : UserData? {
+        return repo.cacheData
+    }
+
     fun loginAsGuest(){
         val tempData = UserData("guest", "0")
         application.getSharedPreferences("UNAME", AppCompatActivity.MODE_PRIVATE)
@@ -106,6 +112,8 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         repo.deleteData()
     }
 
+
+    @Deprecated("Now all logic only on server")
     fun likePlace(id : String) {
         if (_userData.value != null) {
             val tempData = _userData.value!!
@@ -114,17 +122,19 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun subscribe(id : String) {
-        if (_userData.value != null) {
-            val tempData = _userData.value!!
-            tempData.subscribe(id)
-            repo.updateData(tempData)
-        }
-    }
+    @Deprecated("Now all logic only on server")
     fun unLikePlace(id : String) {
         if (_userData.value != null) {
             val tempData = _userData.value!!
             tempData.unLike(id)
+            repo.updateData(tempData)
+        }
+    }
+
+    fun subscribe(id : String) {
+        if (_userData.value != null) {
+            val tempData = _userData.value!!
+            tempData.subscribe(id)
             repo.updateData(tempData)
         }
     }

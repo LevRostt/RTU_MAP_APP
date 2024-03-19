@@ -1,5 +1,6 @@
 package ru.levrost.rtu_map_app.ui.view.Activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
@@ -18,12 +20,14 @@ import androidx.navigation.fragment.findNavController
 import com.yandex.mapkit.MapKitFactory
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.global.debugLog
+import ru.levrost.rtu_map_app.global.observeOnce
+import ru.levrost.rtu_map_app.service.NotificationService
+import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val MAPKIT_API_KEY = "da88c11a-ce91-46e7-bfa8-ab8a2c9d90a0"
     private var navTopestController: NavController? = null
     private var lastBackPress: Long = 0
 
@@ -31,14 +35,17 @@ class MainActivity : AppCompatActivity() {
         UserViewModel.Factory
     }
 
+    private val placeListViewModel: PlaceListViewModel by viewModels {
+        PlaceListViewModel.Factory
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge() //edge to edge ломает возможность смены цвета в статус баре
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         window.statusBarColor = resources.getColor(R.color.base_brown_statusBar, theme) // Рисую кастомную верхнюю полоску
-
-        MapKitFactory.setApiKey(MAPKIT_API_KEY)
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListiner, true) // Вешаю слушатель на каждый фрагмент
 
@@ -65,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 
         navRestart()
 
+        val serviceIntent = Intent(application, NotificationService::class.java)
+        application.startForegroundService(serviceIntent)
     }
 
     private val fragmentListiner =
@@ -94,6 +103,7 @@ class MainActivity : AppCompatActivity() {
             navGraph.setStartDestination(R.id.mainFragment)
             navTopestController!!.graph = navGraph
         } else {
+            userViewModel.deleteUser()
             navTopestController!!.popBackStack(R.id.loginFragment, false)
             navTopestController!!.graph = navGraph
         }

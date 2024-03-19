@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
-import ru.levrost.rtu_map_app.databinding.MapListPlaceBinding
+import ru.levrost.rtu_map_app.databinding.MapPlaceCardBinding
 import ru.levrost.rtu_map_app.global.isInternetAvailable
 import ru.levrost.rtu_map_app.global.observeOnce
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
@@ -48,18 +48,18 @@ class PlaceListRVAdapter(
 
     class PlaceListHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        private var _binding : MapListPlaceBinding
+        private var _binding : MapPlaceCardBinding
         val binding get() = _binding
 
         init {
-            _binding = MapListPlaceBinding.bind(itemView)
+            _binding = MapPlaceCardBinding.bind(itemView)
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceListHolder {
         return PlaceListHolder(
-            MapListPlaceBinding
+            MapPlaceCardBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
                 .root
         )
@@ -99,7 +99,12 @@ class PlaceListRVAdapter(
 
         binding.apply {
 
-            userName.text = place.userName
+            if (place.userName == ""){
+                userName.text = "guest"
+            }
+            else{
+                userName.text = place.userName
+            }
             placeName.text = place.name
             placeInfo.text = place.description
             countOfLikes.text = place.likes.toString()
@@ -129,73 +134,88 @@ class PlaceListRVAdapter(
                 btnLike.setImageResource(R.drawable.favorite_icon_active)
             }
 
-        }
+            btnLike.setOnClickListener {
 
-        binding.btnLike.setOnClickListener {
+                val userId = userData?.userId
 
-            val userId = userData?.userId
-
-            if (isInternetAvailable(context)) {
-                if (userId == null || userId == "0" || userId == "-1") {
-                    loginRequest()
-                } else {
-                    if (!place.isLiked || !placesList[position].isLiked) {
-                        //userViewModel.likePlace(place.idPlace)
-                        placeListViewModel.likePlace(place.idPlace)
-                        binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
-                        binding.countOfLikes.text =
-                            (binding.countOfLikes.text.toString().toInt() + 1).toString()
-                        placesList[position].liked()
+                if (isInternetAvailable(context)) {
+                    if (userId == null || userId == "0" || userId == "-1") {
+                        loginRequest()
                     } else {
-                        //userViewModel.unLikePlace(place.idPlace)
-                        placeListViewModel.unLikePlace(place.idPlace)
-                        binding.btnLike.setImageResource(R.drawable.favorite_icon)
-                        binding.countOfLikes.text =
-                            (binding.countOfLikes.text.toString().toInt() - 1).toString()
-                        placesList[position].unLiked()
+                        if (!place.isLiked || !placesList[position].isLiked) {
+                            //userViewModel.likePlace(place.idPlace)
+                            placeListViewModel.likePlace(place.idPlace)
+                            binding.btnLike.setImageResource(R.drawable.favorite_icon_active)
+                            binding.countOfLikes.text =
+                                (binding.countOfLikes.text.toString().toInt() + 1).toString()
+                            placesList[position].liked()
+                        } else {
+                            //userViewModel.unLikePlace(place.idPlace)
+                            placeListViewModel.unLikePlace(place.idPlace)
+                            binding.btnLike.setImageResource(R.drawable.favorite_icon)
+                            binding.countOfLikes.text =
+                                (binding.countOfLikes.text.toString().toInt() - 1).toString()
+                            placesList[position].unLiked()
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Failed to send data. Check Internet access",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            btnDelete.setOnClickListener {
+                val userId = userData?.userId
+
+                if (isInternetAvailable(context)){
+                    if (userId == null || userId == "0" || userId == "-1"){
+                        loginRequest()
+                    }
+                    else{
+                        placeListViewModel.deletePlace(place.idPlace)
+                        if(placesList.size == 1){
+                            updateData(emptyList())
+                        }
+                        notifyItemRemoved(position)
+                        Toast.makeText(
+                            context,
+                            "Место удалено",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        binding.btnDelete.visibility = View.GONE // Иначе иконка багом сохраняется у первых карточек
                     }
                 }
-            } else {
-                Toast.makeText(
-                    context,
-                    "Failed to send data. Check Internet access",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
 
-        binding.btnDelete.setOnClickListener {
-            val userId = userData?.userId
-
-            if (isInternetAvailable(context)){
-                if (userId == null || userId == "0" || userId == "-1"){
-                    loginRequest()
-                }
-                else{
-                    placeListViewModel.deletePlace(place.idPlace)
-                    notifyItemRemoved(position)
+                else {
+                    Toast.makeText(
+                        context,
+                        "Failed to send data. Check Internet access",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
-            else {
-                Toast.makeText(
-                    context,
-                    "Failed to send data. Check Internet access",
-                    Toast.LENGTH_SHORT
-                ).show()
+            btnShowOnMap.setOnClickListener {
+                placeListViewModel.selectPlace(place.latitude,place.longitude)
+                fragment.findNavController().popBackStack()
             }
+
+            userName.setOnClickListener{
+                userViewModel.setCardProfileUserData(binding.userName.text.toString(), placesList[position].userId)
+                fragment.findNavController().navigate(R.id.action_mapListFragment_to_profileFragment)
+            }
+
+            userIcon.setOnClickListener {
+                userViewModel.setCardProfileUserData(binding.userName.text.toString(), placesList[position].userId)
+                fragment.findNavController().navigate(R.id.action_mapListFragment_to_profileFragment)
+            }
+
         }
 
-        binding.btnShowOnMap.setOnClickListener {
-            placeListViewModel.selectPlace(place.latitude,place.longitude)
-            fragment.findNavController().popBackStack()
-        }
-
-
-        binding.userName.setOnClickListener{
-            userViewModel.setCardProfileUserData(binding.userName.text.toString(), placesList[position].userId)
-            fragment.findNavController().navigate(R.id.action_mapListFragment_to_profileFragment)
-        }
 
         holder.itemView.animation =
             AnimationUtils.loadAnimation(

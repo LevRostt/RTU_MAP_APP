@@ -1,6 +1,7 @@
 package ru.levrost.rtu_map_app.data.repositories
 
 import android.app.Application
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -22,32 +23,47 @@ import ru.levrost.rtu_map_app.data.dataSource.retrofit.model.PlaceToServer
 import ru.levrost.rtu_map_app.data.dataSource.room.entites.PlaceEntity
 import ru.levrost.rtu_map_app.data.dataSource.room.root.AppDataBase
 import ru.levrost.rtu_map_app.data.model.Place
-import ru.levrost.rtu_map_app.global.debugLog
+import ru.levrost.rtu_map_app.data.model.UserData
 import java.io.File
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 import java.util.stream.Collectors
 
 
-class PlaceListRepo(private val application: Application) : repository<List<Place>> {
+class PlaceListRepo private constructor(private val context: Application) {
 
-    private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(application)
+    private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(context)
     private val serverApi = ApiClient.getClient().create(ServerApi::class.java)
 
-    private val sharedPref = application.getSharedPreferences(
+    private var _cachedData : List<Place>? = null
+    val cacheData get() = _cachedData
+
+    private val sharedPref = context.getSharedPreferences(
         "UNAME",
         AppCompatActivity.MODE_PRIVATE
     )
+
+    companion object{
+        private var _instance : PlaceListRepo? = null
+        fun getInstance(context: Application): PlaceListRepo {
+            if (_instance == null){
+                _instance = PlaceListRepo(context)
+            }
+            return _instance!!
+        }
+
+        fun getInstance(): PlaceListRepo?{
+            return _instance
+        }
+
+    }
 
     init {
         getFromServer()
     }
 
-    private fun getFromServer(){
+    fun getFromServer(){
 
-        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "") //!
+        val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
         serverApi.getPlaces(accessToken).enqueue(object : Callback<List<PlaceFromServer>>{
             override fun onResponse(call: Call<List<PlaceFromServer>>, response: Response<List<PlaceFromServer>>) {
@@ -95,9 +111,9 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
         var image : MultipartBody.Part? = null
         if(place.isPicSaved()) {
             val inputStream =
-                application.contentResolver.openInputStream(Uri.parse(placeToServer.image))
+                context.contentResolver.openInputStream(Uri.parse(placeToServer.image))
 
-            val imageFile = File(application.cacheDir, "imageFile").apply { createNewFile() }
+            val imageFile = File(context.cacheDir, "imageFile").apply { createNewFile() }
 
             inputStream.use { stream ->
                 imageFile.outputStream().use { fileOut ->
@@ -196,7 +212,7 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
         })
     }
 
-    override fun getData(): LiveData<List<Place>> {
+    fun getData(): LiveData<List<Place>> {
         return dataBaseSource.placeListDao()?.getAllPlaces()?.map { placeList ->
             placeList.stream().map {
                 Place(
@@ -260,8 +276,9 @@ class PlaceListRepo(private val application: Application) : repository<List<Plac
         }
     }
 
-    fun pushPlaces(data : List<Place>) {
+    private fun pushPlaces(data : List<Place>) {
         if (data.isNotEmpty()) {
+            _cachedData = data
             AppDataBase.databaseWriteExecutor.execute {
                 dataBaseSource.placeListDao()?.replacePlaces(
                     data.map {

@@ -22,7 +22,7 @@
             android:background="@drawable/search_view_bg"
             android:layout_weight="1"
             app:searchIcon="@drawable/search_vector"
-            app:queryHint="Insert place name"
+            app:queryHint="@string/insert_place_hint"
             app:iconifiedByDefault="false"/>
 
         <ImageButton

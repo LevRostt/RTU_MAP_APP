@@ -11,20 +11,14 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -32,6 +26,7 @@ import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObject
+import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.map.RotationType
@@ -41,13 +36,17 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import ru.levrost.rtu_map_app.R
+import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.databinding.MapFragmentBinding
+import ru.levrost.rtu_map_app.databinding.MapPlaceCardBinding
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
+
 
 class MapFragment: Fragment() {
 
     private var _binding: MapFragmentBinding? = null
+    private val MAPKIT_API_KEY = "da88c11a-ce91-46e7-bfa8-ab8a2c9d90a0"
     private val mBinding get() = _binding!!
     private val userViewModel: UserViewModel by activityViewModels<UserViewModel> {
         UserViewModel.Factory
@@ -57,13 +56,20 @@ class MapFragment: Fragment() {
         PlaceListViewModel.Factory
     }
 
+    private var cardFragment : MapCardFragment? = null
+
     private var mapView: MapView? = null
     private var userPoint: Point = Point()
     private var userLocationLayer: UserLocationLayer? = null
     private var zoom: Float = 9.5F
+    private var mapObjects: MapObjectCollection? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        try {
+            MapKitFactory.setApiKey(MAPKIT_API_KEY)
+        } catch (e: AssertionError){}
 
         MapKitFactory.initialize(context)
 
@@ -81,6 +87,10 @@ class MapFragment: Fragment() {
         mapView = mBinding.mapView
 
         userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapView!!.mapWindow)
+
+        mapObjects = mapView!!.map.mapObjects.addCollection()
+
+        createMapPlaces()
 
 //        mapView.map.isNightModeEnabled = true
 
@@ -159,95 +169,50 @@ class MapFragment: Fragment() {
     private fun updateLocation(){
 
         userPoint = userViewModel.userPoint(viewLifecycleOwner)
-        if (userPoint.latitude != 55.7515){
-            zoom = 16F
-        }
-        else{
-            zoom = 4.5F
+        zoom = if (userPoint.latitude != 55.7515){
+            16F
+        } else{
+            4.5F
         }
 
     }
 
+    private fun createMapPlaces() { //Добавляет приблюжённые к пользователю места на карту
+        val objectTapListener =
+            MapObjectTapListener { mapObject: MapObject, _: Point? ->  // Создаём заранее, чтобы не программа не теряла указатель
+                // на это listener
+                val localObject = mapObject as PlacemarkMapObject
+                val userData = localObject.userData
+//                cardFragment = MapCardFragment()
+//                showSecondFragment()
+                Toast.makeText(context, (userData as Place).stringToOut(), Toast.LENGTH_SHORT).show()
+                true
+            }
 
-//    private fun createMapPlaces() { //Добавляет приблюжённые к пользователю места на карту
-//        val objectTapListener =
-//            MapObjectTapListener { mapObject: MapObject, point: Point? ->  // Создаём заранее, чтобы не программа не теряла указатель
-//                // на это listener
-//                val localObject = mapObject as PlacemarkMapObject
-//                val userData = localObject.userData
-//                if (userData is Place) {
-//                    Toast.makeText(
-//                        context,
-//                        (localObject.userData as Place?).getName(),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//                true
-//            }
-//        mUserViewModel.getData().observe(viewLifecycleOwner) { data ->
-//            mPlaceViewModel.getPlaces().observe(viewLifecycleOwner) { places ->
-//                for (place in places) {
-//                    if (userPoint != null && Place.calculateDistance(
-//                            userPoint.latitude,
-//                            userPoint.longitude,
-//                            place
-//                        ) < Place.showDistance
-//                    ) {
-//                        val `object`: PlacemarkMapObject = mapObjects.addPlacemark(
-//                            Point(
-//                                place.getLatitude(),
-//                                place.getLongitude()
-//                            )
-//                        )
-//                        `object`.setIcon(
-//                            ImageProvider.fromResource(
-//                                context,
-//                                R.drawable.pin
-//                            ),
-//                            IconStyle().setAnchor(PointF(0.5f, 0.7f))
-//                                .setScale(0.04f)
-//                        )
-//                        `object`.isVisible = true
-//                        `object`.userData = place
-//                        `object`.addTapListener(objectTapListener)
-//                    } // Настройка видимости места
-//
-//                    //Проверяем находится ли пользователь достаточно близко к месту, чтобы добавить его как посещённое
-//                    if (userPoint != null && Place.calculateDistance(
-//                            userPoint.latitude,
-//                            userPoint.longitude,
-//                            place
-//                        ) < place.getRadius()
-//                    ) {
-//                        var include = false
-//                        for (mPlaces in data.getIdOfVisitedPlaces()) {
-//                            if (mPlaces === place.getId()) {
-//                                include = true
-//                                break
-//                            }
-//                        }
-//                        if (!include) {
-//                            mUserViewModel.refusedDataBase(viewLifecycleOwner)
-//                            mUserViewModel.insertPlace(place.getId())
-//                            mBinding.mapNotification.startAnimation(
-//                                AnimationUtils.loadAnimation(
-//                                    context,
-//                                    R.anim.visible_on
-//                                )
-//                            )
-//                            mBinding.mapNotification.setVisibility(View.VISIBLE)
-//                            mBinding.mapNotification.setOnClickListener { v ->
-//                                NavHostFragment.findNavController(
-//                                    this
-//                                )
-//                                    .navigate(MapFragmentDirections.actionMapFragmentToVisitListFragmentOnMapList())
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+        placeListViewModel.placeList.observe(viewLifecycleOwner) { places ->
+            for (place in places) {
+
+                val mapObj: PlacemarkMapObject? = mapObjects?.addPlacemark(
+                    Point(
+                        place.latitude,
+                        place.longitude
+                    )
+                )
+                mapObj?.setIcon(
+                    ImageProvider.fromResource(
+                        context,
+                        R.drawable.filled_pin_pic
+                    ),
+                    IconStyle().setAnchor(PointF(0.5f, 0.7f))
+                        .setScale(0.035f)
+                )
+                mapObj?.isVisible = true
+                mapObj?.userData = place
+                mapObj?.addTapListener(objectTapListener)
+
+            }
+        }
+    }
 
     //Проверка выдачи пользователя разрешения на использование геолокации
     private fun checkAvailableUserLocationAccess(): Boolean {
@@ -276,6 +241,20 @@ class MapFragment: Fragment() {
                     REQUEST_LOCATION_PERMISSION
                 )
         }
+    }
+
+    private fun showSecondFragment() {
+        childFragmentManager.beginTransaction()
+            .replace(R.id.card_fragment, cardFragment!!)
+            .commit()
+        mBinding.cardFragment.visibility = View.VISIBLE
+    }
+
+    private fun hideSecondFragment() {
+        childFragmentManager.beginTransaction()
+            .remove(cardFragment!!)
+            .commit()
+        mBinding.cardFragment.visibility = View.GONE
     }
 
 //устанавливаем дизайн для иконки местоположения пользователя

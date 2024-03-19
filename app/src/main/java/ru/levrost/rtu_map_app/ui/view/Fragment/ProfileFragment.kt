@@ -1,18 +1,22 @@
 package ru.levrost.rtu_map_app.ui.view.Fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.databinding.FragmentProfileBinding
 import ru.levrost.rtu_map_app.global.debugLog
 import ru.levrost.rtu_map_app.global.observeOnce
+import ru.levrost.rtu_map_app.service.NotificationService
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
@@ -41,31 +45,61 @@ class ProfileFragment: Fragment() {
                 subscribeBtn.visibility = View.GONE
                 jumpBack.visibility = View.GONE
                 exit.visibility = View.VISIBLE
-                userViewModel.getUser().observeOnce(viewLifecycleOwner){
-                    debugLog(it.toString())
-                    personName.text = it.name
-                }
+                personName.text = userViewModel.getCachedUser()?.name
             }
         }
         else{
             cardUserProfileId = userViewModel.cardProfileUserData[1]
-            Log.d("LRDebugMess",cardUserProfileId)
+
             mBinding.apply {
-                subscribeBtn.visibility = View.VISIBLE
+                if (userViewModel.getCachedUser()?.name == userViewModel.cardProfileUserData[0])
+                    subscribeBtn.visibility = View.GONE
+                else {
+                    subscribeBtn.visibility = View.VISIBLE
+                    if (userViewModel.getCachedUser()?.subUsers?.contains(cardUserProfileId) == true) {
+
+                    }
+                }
+
                 jumpBack.visibility = View.VISIBLE
                 exit.visibility = View.GONE
                 personName.text = userViewModel.cardProfileUserData[0]
             }
         }
 
+        mBinding.apply {
 
-        mBinding.exit.setOnClickListener {
-            userViewModel.deleteUser()
-            (activity as MainActivity).navRestart()
+            subscribeBtn.setOnClickListener {
+                subscribe()
+            }
+
+            exit.setOnClickListener {
+                userViewModel.deleteUser()
+                (activity as MainActivity).navRestart()
+            }
+
+            jumpBack.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
 
-        mBinding.jumpBack.setOnClickListener {
-            findNavController().popBackStack()
+    }
+
+    private fun subscribe() {
+        userViewModel.userData.observe(viewLifecycleOwner){
+            if (it.subUsers.contains(cardUserProfileId)){
+                mBinding.subscribeBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.main_button)
+                userViewModel.unscribe(cardUserProfileId)
+                mBinding.subscribeBtn.text = ContextCompat.getString(requireContext(), R.string.subscribe)
+            }
+            else{
+                mBinding.subscribeBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.secondary_button)
+                userViewModel.subscribe(cardUserProfileId)
+                mBinding.subscribeBtn.text = ContextCompat.getString(requireContext(), R.string.unsubscribe)
+
+                val serviceIntent = Intent(context, NotificationService::class.java)
+                context?.startForegroundService(serviceIntent)
+            }
         }
     }
 

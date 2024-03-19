@@ -16,17 +16,23 @@ import ru.levrost.rtu_map_app.data.repositories.PlaceListRepo
 
 class PlaceListViewModel (private val application: Application) : AndroidViewModel(application)  {
 
-    private val repo = PlaceListRepo(application)
+    private val repo = PlaceListRepo.getInstance(application)
     private val _placeList = repo.getData()
     private val _point : MutableLiveData<Point> = MutableLiveData()
     private val _lastBitMap : MutableLiveData<Bitmap> = MutableLiveData()
     private val _lastUri : MutableLiveData<Uri?> = MutableLiveData()
+    private var _lastPlace : Place? = null
 
     val placeList get() = _placeList
 
     fun getPlaceByText(text: String): LiveData<List<Place>> {
         return repo.getPlaceByText(text)
     }
+
+    fun addLastPlace(place : Place?){
+        _lastPlace = place
+    }
+    val lastPlace get() = _lastPlace
 
     private fun addPlace(place: Place){
         repo.addPlace(place)

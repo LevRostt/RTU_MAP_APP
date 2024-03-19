@@ -50,10 +50,6 @@ class CreatePlaceFragment: Fragment() {
     ): View {
         _binding = CreatePlaceFragmentBinding.inflate(inflater, container, false)
 
-        if (userViewModel.userData.value!!.userId == "0"){
-            mBinding.materialSwitch.visibility = View.GONE
-        }
-
         return mBinding.root
     }
 
@@ -104,9 +100,9 @@ class CreatePlaceFragment: Fragment() {
     private fun createPlace(){
 
         if (mBinding.nameField.editText?.text.toString().isEmpty()) {
-            Toast.makeText(context, "Заполните, пожалуйста, поле имени", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, R.string.please_fill_name_field, Toast.LENGTH_LONG).show()
         } else if (placeListViewModel.selectedPlace() == null || placeListViewModel.selectedPlace()!!.latitude == 0.0) {
-            Toast.makeText(context, "Выберете, пожалуйста, место на карте", Toast.LENGTH_LONG)
+            Toast.makeText(context, R.string.pick_a_spot, Toast.LENGTH_LONG)
                 .show()
         } else {
 
@@ -129,7 +125,7 @@ class CreatePlaceFragment: Fragment() {
                     it.userId,
                     placeListViewModel.selectedPlace()!!.latitude,
                     placeListViewModel.selectedPlace()!!.longitude,
-                    mBinding.descriptionField.editText?.text.toString(),
+                    mBinding.nameField.editText?.text.toString(),
                     0,
                     false,
                     pictureToSave

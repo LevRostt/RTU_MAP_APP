@@ -38,7 +38,6 @@ class MapSelectedFragment: Fragment() {
     private lateinit var mapView: MapView
     private lateinit var mapKit : MapKit
     private lateinit var mapObjects: MapObjectCollection
-    private lateinit var icon : ImageProvider
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,8 +55,6 @@ class MapSelectedFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        icon = ImageProvider.fromResource(context, R.drawable.location_pin_filled)
-
         mapView.map.move(CameraPosition(Point(55.7515, 37.64), 5f, 0.0f, 0.0f))
         mapView.map.addInputListener(inputListener)
     }
@@ -73,7 +70,9 @@ class MapSelectedFragment: Fragment() {
 
             //
             obj.setIcon(
-                icon
+                ImageProvider.fromResource(context, R.drawable.filled_pin_pic,),
+                IconStyle().setAnchor(PointF(0.5f, 0.7f))
+                    .setScale(0.04f)
             )
 
             obj.isVisible = true

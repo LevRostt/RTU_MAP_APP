@@ -28,6 +28,10 @@ class Place(val name: String, val idPlace: String, val userName: String, val use
         return toOut
     }
 
+    fun stringToOut(): String{
+        return if (userName != "") "$name by $userName" else "$name by guest"
+    }
+
     constructor(name: String, idPlace: String, userName: String, userId: String, latitude: Double, longitude : Double,
                 description: String, likes: Int, isLiked: Boolean, image: String?)
             : this(name, idPlace, userName, userId, latitude, longitude){

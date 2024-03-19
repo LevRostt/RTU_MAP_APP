@@ -76,7 +76,7 @@
                 android:id="@+id/loginField"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Логин"
+                android:hint="@string/login"
                 android:maxLength="20"
                 android:textColorHint="@color/base_brown"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -98,7 +98,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:hint="Пароль"
+                android:hint="@string/password"
                 android:maxLength="20"
                 android:textColorHint="@color/base_brown"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -128,7 +128,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="40dp"
                 android:background="@drawable/main_button"
-                android:text="@string/btn_log"
+                android:text="@string/login"
                 android:textColor="@color/base_brown" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/linearLayout">
@@ -147,14 +147,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="4dp"
-                android:text="Нет аккаунта?" />
+                android:text="@string/no_account" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/sing_in_as_guest"
                 android:textAllCaps="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Войти как гость"
+                android:text="@string/login_as_guest"
                 android:textColor="@color/base_brown"
                 android:background="@drawable/secondary_button"/>
             <TextView
@@ -162,7 +162,7 @@
                 android:textColor="@color/base_brown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="или"/>
+                android:text="@string/or"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_reg"
                 android:paddingHorizontal="8dp"
@@ -170,7 +170,7 @@
                 android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Зарегистроваться"
+                android:text="@string/register"
                 android:textColor="@color/base_brown"
                 android:background="@drawable/secondary_button"/>
 

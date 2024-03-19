@@ -25,8 +25,10 @@
     <ImageView
         android:id="@+id/place_pic"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginTop="24dp"
+        android:layout_height="200dp"
+        android:minHeight="120dp"
+        android:maxHeight="300dp"
+        android:layout_marginTop="40dp"
         android:cropToPadding="true"
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
@@ -37,7 +39,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tap to pic to select another"
+        android:text="@string/tap_to_pic_to_select_another"
         android:layout_marginEnd="24dp"
         android:textColor="@color/base_brown_light"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,43 +71,43 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/descriptionField"
-        style="?attr/textInputFilledStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginHorizontal="48dp"
-        android:hint="@string/place_description"
-        android:maxLength="100"
-        android:textColorHint="@color/base_brown"
-        app:boxBackgroundColor="@color/light_beige_main_theme"
-        app:boxStrokeColor="@color/base_log_field"
-        app:boxStrokeWidth="2dp"
-        app:boxStrokeWidthFocused="4dp"
-        app:cursorColor="@color/base_brown"
-        app:hintTextColor="@color/base_brown"
-        app:layout_constraintTop_toBottomOf="@+id/nameField">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/descriptionField"-->
+<!--        style="?attr/textInputFilledStyle"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:layout_marginHorizontal="48dp"-->
+<!--        android:hint="@string/place_description"-->
+<!--        android:maxLength="100"-->
+<!--        android:textColorHint="@color/base_brown"-->
+<!--        app:boxBackgroundColor="@color/light_beige_main_theme"-->
+<!--        app:boxStrokeColor="@color/base_log_field"-->
+<!--        app:boxStrokeWidth="2dp"-->
+<!--        app:boxStrokeWidthFocused="4dp"-->
+<!--        app:cursorColor="@color/base_brown"-->
+<!--        app:hintTextColor="@color/base_brown"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/nameField">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/dark_brown" />
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/dark_brown" />-->
 
-    </com.google.android.material.textfield.TextInputLayout>
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
 
     <LinearLayout
-        android:id="@+id/linearLayout6"
+        android:id="@+id/mapLinearLayout"
         android:layout_width="204dp"
         android:layout_height="66dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/secondary_button"
         android:orientation="horizontal"
         android:visibility="visible"
-        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionField">
+        app:layout_constraintTop_toBottomOf="@+id/nameField">
 
         <TextView
             android:layout_width="wrap_content"
@@ -123,7 +125,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:contentDescription="select on map"
+            android:contentDescription="@string/select_on_the_map"
             android:scaleType="centerInside"
             android:src="@drawable/map_filled_56dp" />
 
@@ -163,18 +165,18 @@
 
 <!--    </LinearLayout>-->
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/materialSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/base_brown"
-        android:text="Show author profile"
-        app:trackTint="@color/base_brown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
-        app:switchPadding="16dp" />
+<!--    <com.google.android.material.materialswitch.MaterialSwitch-->
+<!--        android:id="@+id/materialSwitch"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="56dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:textColor="@color/base_brown"-->
+<!--        android:text="Show author profile"-->
+<!--        app:trackTint="@color/base_brown"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout6"-->
+<!--        app:switchPadding="16dp" />-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_confirm"
@@ -184,11 +186,11 @@
         android:background="@drawable/main_button"
         android:paddingHorizontal="8dp"
         android:layout_marginTop="16dp"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:textAllCaps="false"
         android:textColor="@color/base_brown"
-        app:layout_constraintEnd_toEndOf="@+id/materialSwitch"
-        app:layout_constraintStart_toStartOf="@+id/materialSwitch"
-        app:layout_constraintTop_toBottomOf="@+id/materialSwitch" />
+        app:layout_constraintEnd_toEndOf="@+id/mapLinearLayout"
+        app:layout_constraintStart_toStartOf="@+id/mapLinearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/mapLinearLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

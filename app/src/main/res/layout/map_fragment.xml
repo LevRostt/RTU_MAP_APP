@@ -25,6 +25,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/map_view"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
+    <FrameLayout
+        android:id="@+id/card_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="320dp"
+        android:maxHeight="400dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

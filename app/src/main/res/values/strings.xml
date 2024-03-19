@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">RTU_MAP_APP</string>
-    <string name="btn_log">Login</string>
+    <string name="app_name">RTU MAP APP</string>
     <string name="btn_log_without_acc">Login without account</string>
     <string name="btn_reg">Sing Up</string>
     <string name="project_name">RTU MAP APP</string>
@@ -21,5 +20,23 @@
     <string name="only_with_pictures">Only with pictures</string>
     <string name="user_already_register">User already registered</string>
     <string name="login_error">Data entered incorrectly</string>
+    <string name="confirm">Confirm</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="tap_to_pic_to_select_another">Tap to pic to select another</string>
+    <string name="insert_username_hint">Insert user name</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="no_account">Don\'t have an account?</string>
+    <string name="login_as_guest">Login as guest</string>
+    <string name="or">or</string>
+    <string name="register">Register</string>
+    <string name="insert_place_hint">Insert place name</string>
+    <string name="please_fill_name_field">Please fill in the name field</string>
+    <string name="pick_a_spot">Pick a spot on the map, please</string>
+    <string name="dont_track">Don\'t keep track</string>
+    <string name="user">User</string>
+    <string name="add_new_place">add new place</string>
+    <string name="notification_no_place">It\'s quiet for now. We are waiting for new places to be published by the authors you are subscribed to</string>
 
 </resources>

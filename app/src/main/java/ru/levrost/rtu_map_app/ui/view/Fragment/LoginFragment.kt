@@ -64,14 +64,14 @@ class LoginFragment: Fragment() {
                     mBinding.progressBar.visibility = View.GONE
                 }, 1000, TimeUnit.MILLISECONDS)
 
-                userViewModel.getUser().observe(viewLifecycleOwner){
+                userViewModel.getUser().observe(viewLifecycleOwner){//
                     val sharePref = requireActivity().getSharedPreferences(
                         "UNAME",
                         AppCompatActivity.MODE_PRIVATE
                     )
                     val userName = sharePref.getString("name", "-1")
                     // чек интернета
-                    if (userName != "0" && userName != "-1") {
+                    if (userName != "-1") {
                         debugLog(it.userId + " " + it.name)
                         mBinding.progressBar.visibility = View.GONE
                         mBinding.userAlreadyReg.visibility = View.INVISIBLE
