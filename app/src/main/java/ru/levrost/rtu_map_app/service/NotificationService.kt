@@ -1,6 +1,5 @@
 package ru.levrost.rtu_map_app.service
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -85,6 +84,8 @@ class NotificationService : Service() {
                     newPlace.userId == userId
                 }
             }
+
+            debugLog(uniquePlaceList.toString())
 
             for (place in uniquePlaceList){
                 createNotification(place.userName)

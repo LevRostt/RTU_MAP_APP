@@ -87,6 +87,7 @@ class ProfileFragment: Fragment() {
     }
 
     private fun subscribe() {
+        (requireActivity() as MainActivity).checkAndRequestNotificationPermission(requireContext())
         userViewModel.userData.observeOnce(viewLifecycleOwner){
             if (it.subUsers.contains(cardUserProfileId)){
                 mBinding.subscribeBtn.background = ContextCompat.getDrawable(requireContext(), R.drawable.main_button)

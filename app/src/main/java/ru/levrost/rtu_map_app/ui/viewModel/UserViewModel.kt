@@ -27,6 +27,7 @@ import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.data.repositories.UserDataRepo
 import ru.levrost.rtu_map_app.service.NotificationService
 import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
+import java.lang.NullPointerException
 
 class UserViewModel(private val application: Application) : AndroidViewModel(application) {
     private val repo: UserDataRepo = UserDataRepo.getInstance(application)
@@ -74,10 +75,12 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
                 val location = it.result
                 val tempData = _userData.value!!
 
-                tempData.apply {
-                    latitude = location.latitude
-                    longitude = location.longitude
-                }
+                try {
+                    tempData.apply {
+                        latitude = location.latitude
+                        longitude = location.longitude
+                    }
+                } catch (_: NullPointerException){return@addOnCompleteListener}
 
                 repo.updateData(tempData)
                 _userData = repo.getData()

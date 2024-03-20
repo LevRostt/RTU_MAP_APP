@@ -1,5 +1,6 @@
 package ru.levrost.rtu_map_app.ui.view.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +9,9 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
@@ -71,9 +74,42 @@ class MainActivity : AppCompatActivity() {
         })
 
         navRestart()
+    }
 
+    override fun onStart() {
+        super.onStart()
+        checkAndRequestNotificationPermission(this)
         val serviceIntent = Intent(application, NotificationService::class.java)
         application.startForegroundService(serviceIntent)
+    }
+
+    fun checkAndRequestNotificationPermission(context: Context) {
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+            showNotificationPermissionDialog(context)
+        }
+    }
+
+    private fun showNotificationPermissionDialog(context: Context) {
+        val builder = AlertDialog.Builder(context)
+        builder.apply {
+            setTitle("Включите уведомления")
+            setMessage("Для получения уведомлений, пожалуйста, включите их в настройках")
+            setPositiveButton("Настройки") { _, _ ->
+                openNotificationSettings(context)
+            }
+            setNegativeButton("Отмена") { dialog, _ ->
+                dialog.dismiss()
+            }
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun openNotificationSettings(context: Context) {
+        val intent = Intent()
+        intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+        intent.putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
+        context.startActivity(intent)
     }
 
     private val fragmentListiner =

@@ -38,6 +38,7 @@ import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.databinding.MapFragmentBinding
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
+import java.lang.RuntimeException
 
 
 class MapFragment: Fragment() {
@@ -278,13 +279,16 @@ class MapFragment: Fragment() {
                 .commit()
 
         }
-        fragmentMarkObject?.setIcon(
-            ImageProvider.fromResource(
-                context,
-                R.drawable.filled_pin_pic
-            ),
-            IconStyle().setAnchor(PointF(0.5f, 0.7f))
-                .setScale(0.0f))
+        try {
+            fragmentMarkObject?.setIcon(
+                ImageProvider.fromResource(
+                    context,
+                    R.drawable.filled_pin_pic
+                ),
+                IconStyle().setAnchor(PointF(0.5f, 0.7f))
+                    .setScale(0.0f))
+        } catch (_: RuntimeException) {}
+
 
     }
 

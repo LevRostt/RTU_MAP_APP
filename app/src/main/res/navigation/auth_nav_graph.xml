@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_up_nav"
+            app:exitAnim="@anim/slide_out_up"
             app:popEnterAnim="@anim/slide_out_down"
-            app:popExitAnim="@anim/slide_in_down"
-            app:enterAnim="@anim/slide_in_up"
-            app:exitAnim="@anim/slide_out_up"/>
+            app:popExitAnim="@anim/slide_in_down_nav" />
         <action
             android:id="@+id/action_loginFragment_to_mainFragment"
             app:destination="@id/mainFragment" />

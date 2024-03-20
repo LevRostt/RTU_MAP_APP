@@ -55,6 +55,8 @@ class MapCardFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.btnShowOnMap.visibility = View.GONE
 
+        userData = userViewModel.getCachedUser()!!
+
         mBinding.apply {
             if (place.userName == "") {
                 userName.text = "guest"
