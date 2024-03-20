@@ -15,8 +15,8 @@
 
     <ImageButton
         android:id="@+id/user_location_btm"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/map_get_location_button"
@@ -25,13 +25,27 @@
         app:layout_constraintBottom_toBottomOf="@+id/map_view"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/card_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="320dp"
-        android:maxHeight="400dp"
-        android:visibility="visible"
+        android:layout_marginTop="100dp"
+        android:foregroundGravity="bottom"
+        android:maxHeight="500dp"
+        android:minHeight="200dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageButton
+        android:id="@+id/card_close_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="8dp"
+        android:background="@color/zero"
+        android:scaleType="center"
+        android:src="@drawable/close_icon"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

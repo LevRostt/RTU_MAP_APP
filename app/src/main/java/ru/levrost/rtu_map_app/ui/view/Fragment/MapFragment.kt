@@ -12,10 +12,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -38,7 +36,6 @@ import com.yandex.runtime.image.ImageProvider
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.databinding.MapFragmentBinding
-import ru.levrost.rtu_map_app.databinding.MapPlaceCardBinding
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
@@ -63,6 +60,7 @@ class MapFragment: Fragment() {
     private var userLocationLayer: UserLocationLayer? = null
     private var zoom: Float = 9.5F
     private var mapObjects: MapObjectCollection? = null
+    private var fragmentMarkObject : PlacemarkMapObject? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +98,7 @@ class MapFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        hideCardFragment()
 
         userLocationLayer!!.isVisible = true
         userLocationLayer!!.setObjectListener(locationObjectListener)
@@ -109,7 +108,10 @@ class MapFragment: Fragment() {
             jumpToUser(2F)
         }
 
-        setupMapStyle()
+        mBinding.cardCloseBtn.setOnClickListener {
+            hideCardFragment()
+            mBinding.cardCloseBtn.visibility = View.GONE
+        }
 
         if(!checkAvailableUserLocationAccess()){
             requestAvailableUserLocation()
@@ -119,6 +121,7 @@ class MapFragment: Fragment() {
             jumpToUser(1.5F)
         }
 
+        setupMapStyle()
         updateLocation()
         jumpToUser(2F)
         jumpToPlace()
@@ -179,13 +182,23 @@ class MapFragment: Fragment() {
 
     private fun createMapPlaces() { //Добавляет приблюжённые к пользователю места на карту
         val objectTapListener =
-            MapObjectTapListener { mapObject: MapObject, _: Point? ->  // Создаём заранее, чтобы не программа не теряла указатель
-                // на это listener
-                val localObject = mapObject as PlacemarkMapObject
-                val userData = localObject.userData
-//                cardFragment = MapCardFragment()
-//                showSecondFragment()
-                Toast.makeText(context, (userData as Place).stringToOut(), Toast.LENGTH_SHORT).show()
+            MapObjectTapListener { mapObject: MapObject, _: Point? ->  // Создаём заранее, чтобы mapkit не терял указатель на listener(написано в доках)
+                showCardFragment(mapObject.userData as Place)
+
+                fragmentMarkObject = mapObject as PlacemarkMapObject
+
+                mBinding.cardCloseBtn.visibility = View.VISIBLE
+
+                mapObject.setIcon(
+                    ImageProvider.fromResource(
+                        context,
+                        R.drawable.pin_pic_picked
+                    ),
+                    IconStyle().setAnchor(PointF(0.5f, 0.7f))
+                        .setScale(0.06f)
+                )
+
+
                 true
             }
 
@@ -209,7 +222,6 @@ class MapFragment: Fragment() {
                 mapObj?.isVisible = true
                 mapObj?.userData = place
                 mapObj?.addTapListener(objectTapListener)
-
             }
         }
     }
@@ -243,18 +255,37 @@ class MapFragment: Fragment() {
         }
     }
 
-    private fun showSecondFragment() {
+    private fun showCardFragment(place : Place) {
+        hideCardFragment()
+
+        cardFragment = MapCardFragment(place)
+        mBinding.cardFragment.visibility = View.VISIBLE
         childFragmentManager.beginTransaction()
             .replace(R.id.card_fragment, cardFragment!!)
+            .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_in_down)
+            .show(cardFragment!!)
             .commit()
-        mBinding.cardFragment.visibility = View.VISIBLE
+
+        mBinding.cardFragment.setOnClickListener {}
     }
 
-    private fun hideSecondFragment() {
-        childFragmentManager.beginTransaction()
-            .remove(cardFragment!!)
-            .commit()
-        mBinding.cardFragment.visibility = View.GONE
+    private fun hideCardFragment() {
+        if (cardFragment != null) {
+            childFragmentManager.beginTransaction()
+                .remove(cardFragment!!)
+                .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_in_down)
+                .show(cardFragment!!)
+                .commit()
+
+        }
+        fragmentMarkObject?.setIcon(
+            ImageProvider.fromResource(
+                context,
+                R.drawable.filled_pin_pic
+            ),
+            IconStyle().setAnchor(PointF(0.5f, 0.7f))
+                .setScale(0.0f))
+
     }
 
 //устанавливаем дизайн для иконки местоположения пользователя
@@ -319,7 +350,6 @@ class MapFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-//        requireActivity().window.statusBarColor = Color.TRANSPARENT
         _binding = null
     }
 

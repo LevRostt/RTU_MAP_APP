@@ -38,5 +38,6 @@
     <string name="user">User</string>
     <string name="add_new_place">add new place</string>
     <string name="notification_no_place">It\'s quiet for now. We are waiting for new places to be published by the authors you are subscribed to</string>
+    <string name="fail_internet">\"Failed to send data. Check Internet access\"</string>
 
 </resources>

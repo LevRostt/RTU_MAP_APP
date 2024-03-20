@@ -18,6 +18,7 @@
     <color name="beige_background_theme_v2">#FFFFDEB6</color>
     <color name="beige_background_theme">#FFFFE5D3</color>
     <color name="milky">#FFFFF6EF</color>
+    <color name="zero">#00000000</color>
 
 
 </resources>
