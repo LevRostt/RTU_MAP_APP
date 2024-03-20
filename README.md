@@ -32,3 +32,5 @@
 * Дизайн
 
 В качестве дизайна использованы существующие гайдлайны дизайн-системы Android-приложений (Material Design)
+
+Демонстрация работы приложения : https://drive.google.com/file/d/1Lf6Jvd_TRTAVeMVa9rQMm0Eao_X2PFCP/view | https://youtu.be/GGFnwiTQoCA
