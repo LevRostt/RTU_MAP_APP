@@ -3,7 +3,6 @@ package ru.levrost.rtu_map_app.ui.viewModel
 import android.app.Application
 import android.graphics.Bitmap
 import android.net.Uri
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,10 +12,11 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.yandex.mapkit.geometry.Point
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.repositories.PlaceListRepo
+import java.lang.ref.WeakReference
 
 class PlaceListViewModel (private val application: Application) : AndroidViewModel(application)  {
 
-    private val repo = PlaceListRepo.getInstance(application)
+    private val repo = PlaceListRepo.getInstance(WeakReference(application.applicationContext))
     private val _placeList = repo.getData()
     private val _point : MutableLiveData<Point> = MutableLiveData()
     private val _lastBitMap : MutableLiveData<Bitmap> = MutableLiveData()

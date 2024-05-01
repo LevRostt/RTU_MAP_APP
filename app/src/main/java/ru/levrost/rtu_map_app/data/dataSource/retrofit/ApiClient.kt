@@ -30,5 +30,8 @@ object ApiClient {
         return retrofit!!
     }
 
+    fun close(){
+        retrofit = null
+    }
 
 }

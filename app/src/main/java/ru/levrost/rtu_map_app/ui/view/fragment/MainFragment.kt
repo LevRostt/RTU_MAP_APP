@@ -1,16 +1,13 @@
-package ru.levrost.rtu_map_app.ui.view.Fragment
+package ru.levrost.rtu_map_app.ui.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.navigation.NavigationView
 import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.databinding.MainFragmentBinding
 

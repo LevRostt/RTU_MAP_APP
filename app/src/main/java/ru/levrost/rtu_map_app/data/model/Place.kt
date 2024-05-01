@@ -56,11 +56,6 @@ class Place(val name: String, val idPlace: String, val userName: String, val use
     }
 
     fun isPicSaved():Boolean { // проверка записи/доступности картинки
-//        try {
-//            Base64.getDecoder().decode(image)
-//        } catch (_: IllegalArgumentException){
-//            return false
-//        }
         return _image != ""
     }
 

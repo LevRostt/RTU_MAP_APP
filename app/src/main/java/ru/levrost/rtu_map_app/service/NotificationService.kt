@@ -19,8 +19,7 @@ import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.repositories.PlaceListRepo
 import ru.levrost.rtu_map_app.data.repositories.UserDataRepo
-import ru.levrost.rtu_map_app.global.debugLog
-import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
+import ru.levrost.rtu_map_app.ui.view.activity.MainActivity
 
 class NotificationService : Service() {
 
@@ -73,8 +72,6 @@ class NotificationService : Service() {
         val subscribe = userRepo?.cacheData?.subUsers
         val newList = placeRepo?.cacheData
 
-        debugLog(subscribe.toString())
-
         if (oldList != null && subscribe != null && oldList!!.size != newList!!.size) {
 
             val uniquePlaceList = newList.filter {newPlace -> //Получаем уникальные места которых ранее не было*
@@ -85,7 +82,7 @@ class NotificationService : Service() {
                 }
             }
 
-            debugLog(uniquePlaceList.toString())
+            //debugLog(uniquePlaceList.toString())
 
             for (place in uniquePlaceList){
                 createNotification(place.userName)
@@ -151,11 +148,13 @@ class NotificationService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         job.cancel()
         PlaceListRepo.detach()
         UserDataRepo.detach()
         placeRepo = null
         userRepo = null
+
         isServiceRunning = false
     }
 

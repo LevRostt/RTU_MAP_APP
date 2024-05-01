@@ -1,21 +1,15 @@
 package ru.levrost.rtu_map_app.ui.viewModel
 
 import android.Manifest
-import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.getSystemService
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -25,12 +19,13 @@ import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.geometry.Point
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.data.repositories.UserDataRepo
-import ru.levrost.rtu_map_app.service.NotificationService
-import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
+import ru.levrost.rtu_map_app.global.ResultStatus
+import ru.levrost.rtu_map_app.global.debugLog
 import java.lang.NullPointerException
+import java.lang.ref.WeakReference
 
 class UserViewModel(private val application: Application) : AndroidViewModel(application) {
-    private val repo: UserDataRepo = UserDataRepo.getInstance(application)
+    private val repo: UserDataRepo = UserDataRepo.getInstance(WeakReference(application.applicationContext))
     private var _userData: LiveData<UserData> = repo.getData()
     val userData get() = _userData
 
@@ -45,14 +40,13 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
         updateData()
     }
 
-    fun register(username: String, password : String){
-        repo.register(username, password)
+    fun register(username: String, password : String): LiveData<ResultStatus>{
+        return repo.register(username, password)
     }
 
-    fun login(username: String, password: String){
-        repo.login(username, password)
+    fun login(username: String, password: String): LiveData<ResultStatus>{
+        return repo.login(username, password)
     }
-
 
     private fun updateData() : Boolean{
         if ((ActivityCompat.checkSelfPermission(
@@ -67,7 +61,7 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
                 .isProviderEnabled(
                 LocationManager.GPS_PROVIDER))
         ){
-                return false
+            return false
         }
 
         fusedLocationProviderClient.lastLocation.addOnCompleteListener( application.mainExecutor ) {
@@ -87,6 +81,11 @@ class UserViewModel(private val application: Application) : AndroidViewModel(app
             }
         }
         return true
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        debugLog("cleared")
     }
 
     fun setCardProfileUserData(name: String, userId: String) {

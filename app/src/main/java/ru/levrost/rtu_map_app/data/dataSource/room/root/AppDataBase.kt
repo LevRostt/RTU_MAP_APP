@@ -40,11 +40,13 @@ abstract class AppDataBase : RoomDatabase() {
             }
             return dbInstance!!
         }
+
         private fun builderDB(context: Context) : AppDataBase {
             return databaseBuilder(context.applicationContext, AppDataBase::class.java, "rtu_map_app_database")
                 .fallbackToDestructiveMigration() // Очищает базу данных при не совпадении версий(Заменить на миграцию, если будет необходимость)
                 .build()
         }
+
     }
 
     override fun clearAllTables() {

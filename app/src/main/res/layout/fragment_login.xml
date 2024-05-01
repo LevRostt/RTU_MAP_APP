@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/light_beige_main_theme"
-    tools:context=".ui.view.Fragment.LoginFragment">
+    tools:context=".ui.view.fragment.LoginFragment">
 <!--    android:translationZ="10dp">-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,6 +53,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/login_error"
+            android:textColor="@color/lite_red"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/some_server_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/server_error"
             android:textColor="@color/lite_red"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout"

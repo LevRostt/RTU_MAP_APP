@@ -6,7 +6,7 @@
     android:paddingTop="24dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/light_beige_main_theme"
-    tools:context=".ui.view.Fragment.CreatePlaceFragment">
+    tools:context=".ui.view.fragment.CreatePlaceFragment">
 
     <ImageButton
         android:id="@+id/cancel_button"

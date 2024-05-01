@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapListFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapListFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.MapListFragment"
         android:label="map_list_fragment"
         tools:layout="@layout/map_list_fragment" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/createPlaceFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.CreatePlaceFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.CreatePlaceFragment"
         android:label="create_place_fragment"
         tools:layout="@layout/create_place_fragment" >
         <action
@@ -28,12 +28,12 @@
     </fragment>
     <fragment
         android:id="@+id/mapSelectedFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapSelectedFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.MapSelectorFragment"
         android:label="fragment_map_selected"
         tools:layout="@layout/fragment_map_selected" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.ProfileFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <argument

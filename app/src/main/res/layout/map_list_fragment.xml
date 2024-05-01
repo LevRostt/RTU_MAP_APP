@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="32dp"
     android:background="@color/milky"
-    tools:context=".ui.view.Fragment.MapListFragment">
+    tools:context=".ui.view.fragment.MapListFragment">
 
     <LinearLayout
         android:id="@+id/search_bar"

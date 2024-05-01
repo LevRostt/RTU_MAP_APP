@@ -1,21 +1,13 @@
 package ru.levrost.rtu_map_app.ui.adapters
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Intent
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.Observer
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -24,11 +16,10 @@ import ru.levrost.rtu_map_app.R
 import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.databinding.MapPlaceCardBinding
-import ru.levrost.rtu_map_app.global.debugLog
 import ru.levrost.rtu_map_app.global.isInternetAvailable
 import ru.levrost.rtu_map_app.global.observeOnce
-import ru.levrost.rtu_map_app.ui.view.Activity.MainActivity
-import ru.levrost.rtu_map_app.ui.view.Fragment.MapListFragment
+import ru.levrost.rtu_map_app.ui.view.activity.MainActivity
+import ru.levrost.rtu_map_app.ui.view.fragment.MapListFragment
 import ru.levrost.rtu_map_app.ui.viewModel.PlaceListViewModel
 import ru.levrost.rtu_map_app.ui.viewModel.UserViewModel
 
@@ -84,7 +75,7 @@ class PlaceListRVAdapter(
             placeInfo.text = place.description
             countOfLikes.text = place.likes.toString()
 
-            debugLog(" position = $position ; place = $place ")
+            //debugLog(" position = $position ; place = $place ")
             if (place.isPicSaved()){
                 placePic.visibility = View.VISIBLE
                 placePic.load(placeListViewModel.getUrl(place.image))
@@ -154,7 +145,7 @@ class PlaceListRVAdapter(
                         notifyItemRemoved(position)
                         Toast.makeText(
                             context,
-                            "Место удалено",
+                            ContextCompat.getString(fragment.requireContext(), R.string.place_is_delete),
                             Toast.LENGTH_SHORT
                         ).show()
                         btnDelete.visibility = View.GONE // Иначе иконка багом сохраняется у первых карточек
@@ -199,9 +190,11 @@ class PlaceListRVAdapter(
 
     private fun loginRequest(){
         val alertDialogBuilder = AlertDialog.Builder(fragment.context)
-        alertDialogBuilder.setMessage("Пожалуйста, залогинтесь, чтобы иметь возможность взаимодействовать с этой функциональностью")
+        alertDialogBuilder.setMessage(ContextCompat.getString(fragment.requireContext(), R.string.please_log_in))
             .setCancelable(false)
-            .setPositiveButton("Залогиниться") { dialog, id -> // login
+            .setPositiveButton(
+                ContextCompat.getString(fragment.requireContext(), R.string.login)
+            ) { dialog, id -> // login
                 fragment.requireActivity().getSharedPreferences("UID", AppCompatActivity.MODE_PRIVATE)
                     .edit()
                     .putString("id", "-1")
@@ -210,7 +203,7 @@ class PlaceListRVAdapter(
                 (fragment.requireActivity() as MainActivity).navRestart()
             }
             .setNegativeButton(
-                "Отмена"
+                ContextCompat.getString(fragment.requireContext(), R.string.cancel)
             ) { dialog, id -> // Закрываем диалоговое окно
                 dialog.cancel()
             }

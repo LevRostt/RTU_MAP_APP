@@ -29,7 +29,6 @@
     <string name="password">Password</string>
     <string name="no_account">Don\'t have an account?</string>
     <string name="login_as_guest">Login as guest</string>
-    <string name="or">or</string>
     <string name="register">Register</string>
     <string name="insert_place_hint">Insert place name</string>
     <string name="please_fill_name_field">Please fill in the name field</string>
@@ -39,5 +38,22 @@
     <string name="add_new_place">add new place</string>
     <string name="notification_no_place">It\'s quiet for now. We are waiting for new places to be published by the authors you are subscribed to</string>
     <string name="fail_internet">\"Failed to send data. Check Internet access\"</string>
+    <string name="en_notification_request">Enable notifications</string>
+    <string name="en_notification_mess">To receive notifications, please enable them in your settings</string>
+
+    <string name="track_location">To track your location in the app, please enable geocaching</string>
+    <string name="please_log_in">Please log in to be able to interact with this functionality</string>
+    <string name="pls_fill_name_field">Please fill in the name field</string>
+    <string name="pls_fill_passwd_field">Please fill in the password field</string>
+    <string name="choose_this_place">Choose this place?</string>
+    <string name="place_is_delete">Place is delete</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="settings">Settings</string>
+    <string name="enable">Enable</string>
+    <string name="cancel">Cancel</string>
+    <string name="or">or</string>
+    <string name="server_error">There was an error on the server</string>
 
 </resources>

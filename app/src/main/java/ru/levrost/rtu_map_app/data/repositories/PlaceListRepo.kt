@@ -26,37 +26,47 @@ import ru.levrost.rtu_map_app.data.model.Place
 import ru.levrost.rtu_map_app.data.model.UserData
 import ru.levrost.rtu_map_app.global.debugLog
 import java.io.File
+import java.lang.ref.WeakReference
 
 import java.util.stream.Collectors
 
 
-class PlaceListRepo private constructor(private val context: Application) {
+class PlaceListRepo private constructor(private var context: WeakReference<Context>?) {
 
-    private var dataBaseSource : AppDataBase = AppDataBase.getDataBase(context)
-    private val serverApi = ApiClient.getClient().create(ServerApi::class.java)
-
+    private var dataBaseSource : AppDataBase? = AppDataBase.getDataBase(context!!.get()!!)
+    private var serverApi : ServerApi? = ApiClient.getClient().create(ServerApi::class.java)
     private var _cachedData : List<Place>? = null
     val cacheData get() = _cachedData
 
-    private val sharedPref = context.getSharedPreferences(
+    private val sharedPref = context!!.get()!!.getSharedPreferences(
         "UNAME",
         AppCompatActivity.MODE_PRIVATE
     )
 
     companion object{
         private var _instance : PlaceListRepo? = null
-        fun getInstance(context: Application): PlaceListRepo {
+
+        @Synchronized
+        fun getInstance(context: WeakReference<Context>): PlaceListRepo {
             if (_instance == null){
                 _instance = PlaceListRepo(context)
             }
             return _instance!!
         }
 
+        @Synchronized
         fun getInstance(): PlaceListRepo?{
             return _instance
         }
 
+        @Synchronized
         fun detach(){
+            _instance?.dataBaseSource?.close()
+            _instance?.dataBaseSource = null
+            ApiClient.close()
+            _instance?.context = null
+            _instance?.serverApi = null
+            _instance?._cachedData = null
             _instance = null
         }
 
@@ -68,13 +78,13 @@ class PlaceListRepo private constructor(private val context: Application) {
 
 
     fun getUrl(link : String) : String{
-        debugLog(ApiClient.SHORT_URL + link)
+        //debugLog(ApiClient.SHORT_URL + link)
         return ApiClient.SHORT_URL + link
     }
     fun getFromServer(){
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
-        serverApi.getPlaces(accessToken).enqueue(object : Callback<List<PlaceFromServer>>{
+        serverApi?.getPlaces(accessToken)?.enqueue(object : Callback<List<PlaceFromServer>>{
             override fun onResponse(call: Call<List<PlaceFromServer>>, response: Response<List<PlaceFromServer>>) {
                 if (response.isSuccessful){
 
@@ -120,9 +130,9 @@ class PlaceListRepo private constructor(private val context: Application) {
         var image : MultipartBody.Part? = null
         if(place.isPicSaved()) {
             val inputStream =
-                context.contentResolver.openInputStream(Uri.parse(placeToServer.image))
+                context!!.get()!!.contentResolver.openInputStream(Uri.parse(placeToServer.image))
 
-            val imageFile = File(context.cacheDir, "imageFile").apply { createNewFile() }
+            val imageFile = File(context!!.get()!!.cacheDir, "imageFile").apply { createNewFile() }
 
             inputStream.use { stream ->
                 imageFile.outputStream().use { fileOut ->
@@ -136,7 +146,7 @@ class PlaceListRepo private constructor(private val context: Application) {
 
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
-        serverApi.postPlace(accessToken, latitude, longitude, description, image).enqueue(object : Callback<PlaceFromServer>{
+        serverApi?.postPlace(accessToken, latitude, longitude, description, image)?.enqueue(object : Callback<PlaceFromServer>{
             override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
                 if (response.isSuccessful){
                     val responsePlace = response.body()!!
@@ -169,7 +179,7 @@ class PlaceListRepo private constructor(private val context: Application) {
     private fun likeToServer(id : String){
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
-        serverApi.like(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+        serverApi?.like(accessToken, id)?.enqueue(object : Callback<PlaceFromServer>{
             override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
                 if (response.isSuccessful){
                     Log.d("LRDebugServer", "Like response ${response.body()!!} ")
@@ -188,7 +198,7 @@ class PlaceListRepo private constructor(private val context: Application) {
     private fun unLikeToServer(id : String){
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
-        serverApi.unlike(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+        serverApi?.unlike(accessToken, id)?.enqueue(object : Callback<PlaceFromServer>{
             override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
                 if (response.isSuccessful){
                     Log.d("LRDebugServer", "Unlike response ${response.code()} ")
@@ -206,7 +216,7 @@ class PlaceListRepo private constructor(private val context: Application) {
     private fun deleteToServer(id : String){
         val accessToken = sharedPref.getString("token_type", "") + " " + sharedPref.getString("access_token", "")
 
-        serverApi.delete(accessToken, id).enqueue(object : Callback<PlaceFromServer>{
+        serverApi?.delete(accessToken, id)?.enqueue(object : Callback<PlaceFromServer>{
             override fun onResponse(call: Call<PlaceFromServer>, response: Response<PlaceFromServer>) {
                 if (response.isSuccessful){
                     Log.d("LRDebugServer", "Delete response ${response.code()} ")
@@ -222,7 +232,7 @@ class PlaceListRepo private constructor(private val context: Application) {
     }
 
     fun getData(): LiveData<List<Place>> {
-        return dataBaseSource.placeListDao()?.getAllPlaces()?.map { placeList ->
+        return dataBaseSource?.placeListDao()?.getAllPlaces()?.map { placeList ->
             placeList.stream().map {
                 Place(
                     it.name,
@@ -243,7 +253,7 @@ class PlaceListRepo private constructor(private val context: Application) {
     fun getPlaceByText(text: String) : LiveData<List<Place>>{
         getFromServer()
 
-        return dataBaseSource.placeListDao()?.getPlacesByText(text)?.map { placeList ->
+        return dataBaseSource?.placeListDao()?.getPlacesByText(text)?.map { placeList ->
             placeList.stream().map {
                 Place(
                     it.name,
@@ -281,7 +291,7 @@ class PlaceListRepo private constructor(private val context: Application) {
 
     fun addPlaceToDataBase(data : Place){
         AppDataBase.databaseWriteExecutor.execute{
-            dataBaseSource.placeListDao()?.addPlace(PlaceEntity(data.name,data.idPlace,data.description, data.image, data.userName, data.userId, data.likes, data.latitude, data.longitude, data.isLiked))
+            dataBaseSource?.placeListDao()?.addPlace(PlaceEntity(data.name,data.idPlace,data.description, data.image, data.userName, data.userId, data.likes, data.latitude, data.longitude, data.isLiked))
         }
     }
 
@@ -289,7 +299,7 @@ class PlaceListRepo private constructor(private val context: Application) {
         if (data.isNotEmpty()) {
             _cachedData = data
             AppDataBase.databaseWriteExecutor.execute {
-                dataBaseSource.placeListDao()?.replacePlaces(
+                dataBaseSource?.placeListDao()?.replacePlaces(
                     data.map {
                         PlaceEntity(
                             it.name,

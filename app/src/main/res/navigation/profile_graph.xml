@@ -7,7 +7,7 @@ app:startDestination="@id/profileFragment">
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.ProfileFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <argument

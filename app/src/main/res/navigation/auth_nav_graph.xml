@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.LoginFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.LoginFragment"
         android:label="login_fragment"
         tools:layout="@layout/fragment_login" >
         <action
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.RegisterFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/fragment_register">
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MainFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.MainFragment"
         android:label="main_fragment"
         tools:layout="@layout/main_fragment" />
 

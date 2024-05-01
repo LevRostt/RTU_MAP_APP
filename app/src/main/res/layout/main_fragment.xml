@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@id/some_text"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.view.Fragment.MainFragment"
+    tools:context=".ui.view.fragment.MainFragment"
     android:background="@color/milky"
     android:orientation="vertical">
 
@@ -16,7 +18,6 @@
         android:layout_marginBottom="-4dp"
         android:layout_weight="1"
         app:navGraph="@navigation/main_nav_graph" />
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

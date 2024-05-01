@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mapFragment"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.MapFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.MapFragment"
         android:label="map_fragment"
         tools:layout="@layout/map_fragment" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment2"
-        android:name="ru.levrost.rtu_map_app.ui.view.Fragment.ProfileFragment"
+        android:name="ru.levrost.rtu_map_app.ui.view.fragment.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
